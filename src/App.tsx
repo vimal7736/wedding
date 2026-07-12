@@ -27,7 +27,7 @@ function App() {
       
       {/* Elegant Header */}
       <div className="relative z-10 text-center mb-2 mt-16 select-none pointer-events-none">
-        <span className="font-['Cinzel'] text-[11px] md:text-[13px] tracking-[0.5em] text-[var(--color-gold-line)] uppercase opacity-90 block mb-3">
+        <span className="font-['Cinzel'] text-[11px] md:text-[13px] tracking-[0.5em] text-[var(--color-beige-warm)] font-bold uppercase opacity-95 block mb-3">
           Wedding Invitation
         </span>
         <h2 className="font-['Cormorant_Garamond'] italic text-3xl md:text-5xl text-[var(--color-beige-paper)] font-light tracking-wide">
@@ -50,7 +50,7 @@ function App() {
           <div className="flex-1 h-[1px] bg-[rgba(200,169,110,0.4)]" />
         </div>
 
-        <p className="font-['Cinzel'] text-[10px] tracking-[4px] text-[#a98a4b] uppercase opacity-50">
+        <p className="font-['Cinzel'] text-[10px] md:text-[11px] tracking-[4px] text-[var(--color-beige-warm)] font-bold uppercase opacity-90">
           Aishwariya &nbsp;✦&nbsp; Vimal &nbsp;·&nbsp; 01 November 2026
         </p>
       </div>
