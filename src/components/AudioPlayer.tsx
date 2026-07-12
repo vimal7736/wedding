@@ -34,6 +34,14 @@ export const AudioPlayer = () => {
     };
   }, [startPlay]);
 
+  // Attempt autoplay after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      startPlay();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [startPlay]);
+
   const togglePlay = async () => {
     if (!audioRef.current) return;
     if (isPlaying) {
