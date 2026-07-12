@@ -3,23 +3,11 @@ import { AudioPlayer } from './components/AudioPlayer';
 import { FallingParticles } from './components/FallingParticles';
 import { OrbitingImages } from './components/OrbitingImages';
 
-// Generate repeating "Aishu Vimal" text
-const bgText = Array.from({ length: 200 }).map((_, i) => (
-  <span key={i} className="inline-block mx-3 my-1 text-[13px] font-['Cormorant_Garamond'] italic tracking-widest opacity-100 text-white">
-    {i % 2 === 0 ? '✦ Aishu' : 'Vimal ✦'}
-  </span>
-));
 
 function App() {
   return (
     <main className="relative min-h-screen w-full flex flex-col items-center justify-start py-12 px-4 overflow-hidden bg-[var(--color-olive-deep)]">
 
-      {/* Background repeating text */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.07]">
-        <div className="flex flex-wrap w-full h-full content-start pt-4">
-          {bgText}
-        </div>
-      </div>
 
       <OrbitingImages />
       <FallingParticles />
@@ -31,7 +19,7 @@ function App() {
           Wedding Invitation
         </span>
         <h2 className="font-['Cormorant_Garamond'] italic text-3xl md:text-5xl text-[var(--color-beige-paper)] font-light tracking-wide">
-          Aishwariya & Vimal
+          Vimal & Aishwariya
         </h2>
         <div className="w-16 h-[1px] bg-[rgba(169,138,75,0.35)] mx-auto mt-4" />
       </div>
@@ -51,7 +39,7 @@ function App() {
         </div>
 
         <p className="font-['Cinzel'] text-[10px] md:text-[11px] tracking-[4px] text-[var(--color-beige-warm)] font-bold uppercase opacity-90">
-          Aishwariya &nbsp;✦&nbsp; Vimal &nbsp;·&nbsp; 01 November 2026
+          Vimal &nbsp;✦&nbsp; Aishwariya &nbsp;·&nbsp; 01 November 2026
         </p>
       </div>
 

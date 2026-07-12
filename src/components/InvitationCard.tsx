@@ -101,10 +101,13 @@ export const InvitationCard = () => {
             </motion.div>
 
             <motion.h1 
-              initial={{ opacity: 0, y: 14, scale: 0.98 }} whileInView={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.7, duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }} viewport={{ once: true }}
-              className="font-['Cormorant_Garamond'] font-semibold text-[clamp(40px,8vw,72px)] leading-[1.2] text-[var(--color-beige-paper)] mt-6"
+              initial={{ opacity: 0, y: 30, filter: 'blur(8px)', letterSpacing: '-0.02em' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)', letterSpacing: '0.02em' }}
+              transition={{ delay: 0.7, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true }}
+              className="font-['Cormorant_Garamond'] font-semibold text-[clamp(26px,6.5vw,72px)] leading-[1.2] text-[var(--color-beige-paper)] mt-6 whitespace-nowrap"
             >
-              Aishwariya <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.4em] text-[var(--color-gold-line)] px-[15px] align-middle">weds</span> Vimal
+              Vimal <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.45em] text-[var(--color-gold-line)] px-[8px] md:px-[15px] align-middle">weds</span> Aishwariya
             </motion.h1>
 
             <motion.div 
