@@ -2,7 +2,7 @@ import { motion, type Variants } from 'framer-motion';
 
 const events = [
   { label: "", title: "Welcome", desc: "Join us as we gather together with warm hearts and warm drinks to begin a beautiful evening." },
-  { label: "", title: "Reception Ceremony", desc: "The couple's grand entrance — a moment of joy, love, and celebration." },
+  { label: "", title: "Reception Ceremony", desc: "The couple's  entrance — a moment of joy, love, and celebration." },
   { label: "", title: "Dinner & Celebration", desc: "A  feast to celebrate their new beginning, followed by music, laughter, and dancing." }
 ];
 
