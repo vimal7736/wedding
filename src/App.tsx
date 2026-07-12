@@ -24,6 +24,18 @@ function App() {
       <OrbitingImages />
       <FallingParticles />
       <AudioPlayer />
+      
+      {/* Elegant Header */}
+      <div className="relative z-10 text-center mb-2 mt-16 select-none pointer-events-none">
+        <span className="font-['Cinzel'] text-[11px] md:text-[13px] tracking-[0.5em] text-[var(--color-gold-line)] uppercase opacity-90 block mb-3">
+          Wedding Invitation
+        </span>
+        <h2 className="font-['Cormorant_Garamond'] italic text-3xl md:text-5xl text-[var(--color-beige-paper)] font-light tracking-wide">
+          Aishwariya & Vimal
+        </h2>
+        <div className="w-16 h-[1px] bg-[rgba(169,138,75,0.35)] mx-auto mt-4" />
+      </div>
+
       <InvitationCard />
 
       {/* Blessing Footer */}

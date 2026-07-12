@@ -11,7 +11,7 @@ const fadeInUp = {
 
 export const InvitationCard = () => {
   return (
-    <div className="relative w-full max-w-6xl mx-auto z-10 p-4 pt-20 md:p-12 mt-16">
+    <div className="relative w-full max-w-6xl mx-auto z-10 p-4 pt-8 md:p-12 mt-4">
       <motion.div 
         className="glass-card rounded-xl overflow-hidden"
         initial={{ opacity: 0, y: 40 }}
