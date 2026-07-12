@@ -30,7 +30,7 @@ export const InvitationCard = () => {
               className="w-full text-center mb-8"
             >
               <p className="font-['Cormorant_Garamond'] italic text-[24px] md:text-[32px] text-[#e8dcc0] leading-snug">
-                May your union be forever blessed
+              Celebrate the start of our forever
               </p>
               <div className="w-16 h-[1px] bg-[rgba(169,138,75,0.35)] mx-auto my-3" />
               <p className="font-['Cormorant_Garamond'] italic text-[15px] md:text-[18px] text-[var(--color-beige-warm)] opacity-80 tracking-wide leading-relaxed">
