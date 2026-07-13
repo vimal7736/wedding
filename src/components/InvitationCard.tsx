@@ -29,17 +29,17 @@ export const InvitationCard = () => {
               transition={{ duration: 1.2, delay: 0.3, ease: 'easeOut' }}
               className="w-full text-center mb-8"
             >
-              <p className="font-['Cormorant_Garamond'] italic text-[24px] md:text-[32px] text-[#e8dcc0] leading-snug">
+              <p className="font-['Cormorant_Garamond'] italic text-[24px] md:text-[32px] text-[var(--color-olive-deep)] leading-snug">
               Celebrate the start of our forever
               </p>
               <div className="w-16 h-[1px] bg-[rgba(169,138,75,0.35)] mx-auto my-3" />
-              <p className="font-['Cormorant_Garamond'] italic text-[15px] md:text-[18px] text-[var(--color-beige-warm)] opacity-80 tracking-wide leading-relaxed">
+              <p className="font-['Cormorant_Garamond'] italic text-[15px] md:text-[18px] text-[var(--color-ink)] opacity-80 tracking-wide leading-relaxed">
                 Two hearts bound by destiny, two souls united in
               </p>
-              <p className="font-['Cormorant_Garamond'] text-[22px] md:text-[28px] text-[var(--color-gold-line)] font-semibold tracking-[1px] mt-1">
+              <p className="font-['Cormorant_Garamond'] text-[22px] md:text-[28px] text-[var(--color-olive-deep)] font-semibold tracking-[1px] mt-1">
                 Sacred Matrimony
               </p>
-              <p className="font-['Cormorant_Garamond'] text-[13px] md:text-[15px] tracking-[4px] text-[var(--color-beige-warm)] opacity-60 uppercase mt-3">
+              <p className="font-['Cormorant_Garamond'] text-[13px] md:text-[15px] tracking-[4px] text-[var(--color-olive-mid)] uppercase mt-3">
                 ✦ &nbsp; Vimal &nbsp; & &nbsp; Aishu &nbsp; ✦
               </p>
             </motion.div>
@@ -48,14 +48,14 @@ export const InvitationCard = () => {
 
             <motion.div 
               variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.2 }}
-              className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] tracking-[4px] text-[var(--color-gold-line)] uppercase mt-2 font-medium"
+              className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] tracking-[4px] text-[var(--color-olive-deep)] uppercase mt-2 font-medium"
             >
               Together with their families
             </motion.div>
 
             <motion.div 
               variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.3 }}
-              className="mt-4 font-['Cormorant_Garamond'] italic text-[16px] md:text-[19px] tracking-[0.5px] text-[var(--color-beige-warm)] opacity-80"
+              className="mt-4 font-['Cormorant_Garamond'] italic text-[16px] md:text-[19px] tracking-[0.5px] text-[var(--color-ink)] opacity-80"
             >
               Invited by his father Suresh & mother Jessy
             </motion.div>
@@ -65,10 +65,10 @@ export const InvitationCard = () => {
               className="mt-8 flex flex-col gap-6 md:gap-8 items-center w-full"
             >
               <div className="flex flex-col items-center">
-                <span className="font-['Cormorant_Garamond'] text-2xl md:text-4xl text-[var(--color-gold-line)] font-semibold tracking-wide">
+                <span className="font-['Cormorant_Garamond'] text-2xl md:text-4xl text-[var(--color-olive-deep)] font-semibold tracking-wide">
                   Vimal Suresh
                 </span>
-                <span className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] mt-2 text-[var(--color-beige-paper)] opacity-80 font-light tracking-[1px] uppercase">
+                <span className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] mt-2 text-[var(--color-ink)] opacity-70 font-light tracking-[1px] uppercase">
                   Beloved son of Suresh & Jessy
                 </span>
               </div>
@@ -76,10 +76,10 @@ export const InvitationCard = () => {
               <div className="w-[40px] h-[1px] bg-[var(--color-gold-line)] opacity-50 my-1"></div>
               
               <div className="flex flex-col items-center">
-                <span className="font-['Cormorant_Garamond'] text-2xl md:text-4xl text-[var(--color-gold-line)] font-semibold tracking-wide">
+                <span className="font-['Cormorant_Garamond'] text-2xl md:text-4xl text-[var(--color-olive-deep)] font-semibold tracking-wide">
                   B. Aishwariya
                 </span>
-                <span className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] mt-2 text-[var(--color-beige-paper)] opacity-80 font-light tracking-[1px] uppercase">
+                <span className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] mt-2 text-[var(--color-ink)] opacity-70 font-light tracking-[1px] uppercase">
                   Beloved daughter of Balu & Tamil Selvi
                 </span>
               </div>
@@ -105,14 +105,14 @@ export const InvitationCard = () => {
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)', letterSpacing: '0.02em' }}
               transition={{ delay: 0.7, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
               viewport={{ once: true }}
-              className="font-['Cormorant_Garamond'] font-semibold text-[clamp(26px,6.5vw,72px)] leading-[1.2] text-[var(--color-beige-paper)] mt-6 whitespace-nowrap"
+              className="font-['Cormorant_Garamond'] font-semibold text-[clamp(26px,6.5vw,72px)] leading-[1.2] text-[var(--color-olive-deep)] mt-6 whitespace-nowrap"
             >
-              Vimal <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.45em] text-[var(--color-gold-line)] px-[8px] md:px-[15px] align-middle">weds</span> Aishwariya
+              Vimal <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.45em] text-[var(--color-ink)] px-[8px] md:px-[15px] align-middle">weds</span> Aishwariya
             </motion.h1>
 
             <motion.div 
               variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 0.8 }}
-              className="mt-6 font-['Cormorant_Garamond'] text-[15px] md:text-[17px] tracking-[3px] uppercase text-[var(--color-beige-warm)] opacity-80 font-medium"
+              className="mt-6 font-['Cormorant_Garamond'] text-[15px] md:text-[17px] tracking-[3px] uppercase text-[var(--color-ink)] opacity-80 font-medium"
             >
               You are cordially invited
             </motion.div>
@@ -124,7 +124,7 @@ export const InvitationCard = () => {
 
             <motion.p 
               variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.0 }}
-              className="font-['Cormorant_Garamond'] text-[18px] md:text-[22px] leading-[1.8] text-[var(--color-mist)] max-w-[600px] mx-auto font-light"
+              className="font-['Cormorant_Garamond'] text-[18px] md:text-[22px] leading-[1.8] text-[var(--color-ink)] max-w-[600px] mx-auto font-light"
             >
               Join us for an evening of joy, laughter and celebration
               as we welcome you to our wedding reception —
@@ -135,43 +135,63 @@ export const InvitationCard = () => {
 
             <Itinerary />
 
-            <div className="flex flex-col md:flex-row justify-center items-center gap-12 md:gap-24 w-full mt-8">
-              <motion.div 
-                variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.1 }}
-                className="flex justify-center gap-10 md:gap-16 flex-wrap"
-              >
-                <div className="min-w-[120px]">
-                  <div className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] tracking-[2px] text-[var(--color-gold-line)] uppercase mb-3 font-semibold">Date</div>
-                  <div className="font-['Cormorant_Garamond'] text-[28px] md:text-[36px] text-[var(--color-beige-paper)] font-medium">01 Nov</div>
-                  <div className="font-['Cormorant_Garamond'] text-[14px] text-[var(--color-beige-warm)] opacity-80 mt-1 tracking-[1px] uppercase">Sunday</div>
-                </div>
-                <div className="w-[1px] bg-[rgba(169,138,75,0.4)] self-stretch hidden md:block" />
-                <div className="min-w-[120px]">
-                  <div className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] tracking-[2px] text-[var(--color-gold-line)] uppercase mb-3 font-semibold">Event</div>
-                  <div className="font-['Cormorant_Garamond'] text-[28px] md:text-[36px] text-[var(--color-beige-paper)] font-medium">Reception</div>
-                  <div className="font-['Cormorant_Garamond'] text-[14px] text-[var(--color-beige-warm)] opacity-80 mt-1 tracking-[1px] uppercase">Evening</div>
-                </div>
-              </motion.div>
+            <div className="w-full max-w-4xl mx-auto mt-12 mb-6 px-2">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-6 items-stretch relative">
+                
+                {/* Column 1: When */}
+                <motion.div 
+                  variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.1 }}
+                  className="flex flex-col items-center justify-center text-center p-6 bg-[rgba(74,90,55,0.03)] rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden group hover:bg-[rgba(74,90,55,0.06)] hover:border-[rgba(169,138,75,0.35)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.01)]"
+                >
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="font-['Cinzel'] text-[11px] md:text-[12px] tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">Date</span>
+                    <span className="font-['Cormorant_Garamond'] text-[32px] md:text-[38px] text-black font-semibold mt-1 leading-none">01 Nov</span>
+                    <span className="font-['Cormorant_Garamond'] text-[14px] text-[var(--color-ink)] opacity-70 tracking-[2px] uppercase">Sunday</span>
+                  </div>
+                  
+                  <div className="w-12 h-[1px] bg-[rgba(169,138,75,0.3)] my-4" />
+                  
+                  <div className="flex flex-col items-center">
+                    <span className="font-['Cinzel'] text-[9px] md:text-[10px] tracking-[2px] text-[var(--color-olive-deep)] uppercase font-semibold opacity-75">Event</span>
+                    <span className="font-['Cormorant_Garamond'] text-[20px] md:text-[22px] text-black font-medium mt-1">Reception</span>
+                    <span className="font-['Cormorant_Garamond'] text-[13px] text-[var(--color-ink)] opacity-60 tracking-[1px] uppercase mt-0.5">Evening</span>
+                  </div>
+                </motion.div>
 
-              <motion.div 
-                variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.2 }}
-                className="flex flex-col items-center"
-              >
-                <div className="text-[14px] md:text-[16px] tracking-[2px] uppercase text-[var(--color-gold-line)] mb-3 font-['Cormorant_Garamond'] font-semibold">Venue</div>
-                <div className="font-['Cormorant_Garamond'] text-[28px] md:text-[36px] italic text-[var(--color-beige-paper)]">PV Garden</div>
-                <div className="font-['Cormorant_Garamond'] text-[16px] md:text-[18px] text-[var(--color-beige-warm)] opacity-80 mt-2 tracking-[0.5px]">Bilathikulam, Calicut</div>
-              </motion.div>
+                {/* Column 2: Where */}
+                <motion.div 
+                  variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.2 }}
+                  className="flex flex-col items-center justify-center text-center p-6 bg-[rgba(74,90,55,0.03)] rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden group hover:bg-[rgba(74,90,55,0.06)] hover:border-[rgba(169,138,75,0.35)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.01)]"
+                >
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="font-['Cinzel'] text-[11px] md:text-[12px] tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">Venue</span>
+                    <span className="font-['Cormorant_Garamond'] text-[32px] md:text-[38px] text-black font-semibold mt-2 leading-none italic">PV Garden</span>
+                    <span className="font-['Cormorant_Garamond'] text-[15px] md:text-[17px] text-[var(--color-ink)] opacity-75 mt-3 max-w-[200px] leading-relaxed">
+                      Bilathikulam, Calicut
+                    </span>
+                  </div>
+                </motion.div>
 
-              <motion.div 
-                variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.3 }}
-                className="flex flex-col items-center group mt-4 md:mt-0"
-              >
-                <a href="https://www.google.com/maps/search/?api=1&query=PV+Garden+Bilathikulam+Calicut" target="_blank" rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-3 no-underline transition-transform duration-300 group-hover:-translate-y-2 group-hover:scale-105">
-                  <MapLeaf className="w-[90px] h-[90px]" />
-                </a>
-                <div className="font-['Cormorant_Garamond'] text-[12px] md:text-[14px] tracking-[2px] uppercase text-[var(--color-beige-warm)] opacity-80 mt-3">Tap for map</div>
-              </motion.div>
+                {/* Column 3: Directions */}
+                <motion.div 
+                  variants={fadeInUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: 1.3 }}
+                  className="flex flex-col items-center justify-center text-center p-6 bg-[rgba(74,90,55,0.03)] rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden group hover:bg-[rgba(74,90,55,0.06)] hover:border-[rgba(169,138,75,0.35)] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.01)]"
+                >
+                  <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
+                  
+                  <a href="https://www.google.com/maps/search/?api=1&query=PV+Garden+Bilathikulam+Calicut" target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 no-underline transition-all duration-300 group-hover:scale-105">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-[var(--color-gold-line)] opacity-0 group-hover:opacity-10 rounded-full blur-md transition-all duration-300" />
+                      <MapLeaf className="w-[80px] h-[80px] relative z-10 drop-shadow-[0_3px_6px_rgba(169,138,75,0.15)]" />
+                    </div>
+                    <span className="font-['Cinzel'] text-[11px] md:text-[12px] tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">Directions</span>
+                    <span className="font-['Cormorant_Garamond'] text-[13px] text-[var(--color-ink)] opacity-60 group-hover:text-[var(--color-olive-deep)] transition-colors duration-300">Tap to open Maps</span>
+                  </a>
+                </motion.div>
+              </div>
             </div>
 
             <motion.div 
