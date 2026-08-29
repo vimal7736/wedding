@@ -62,9 +62,7 @@
 @layer utilities {
   .glass-card {
     background: linear-gradient(180deg, #fbf7ef 0%, #f2ead9 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(169, 138, 75, 0.2);
+    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(169, 138, 75, 0.2);
   }
 
   .glass-card::before {
@@ -75,5 +73,49 @@
       radial-gradient(50% 35% at 85% 5%, rgba(169, 138, 75, 0.05), transparent 60%);
     pointer-events: none;
     border-radius: inherit;
+  }
+
+  .fall-particle {
+    top: -5vh;
+    will-change: transform;
+    animation-name: fall-down;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  .orbit-ring {
+    will-change: transform;
+    animation: orbit-spin 48s linear infinite;
+  }
+
+  .orbit-counter {
+    will-change: transform;
+    animation: orbit-spin 48s linear infinite reverse;
+  }
+}
+
+@keyframes fall-down {
+  from {
+    transform: translate3d(0, -5vh, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(12px, 110vh, 0) rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fall-particle,
+  .orbit-ring,
+  .orbit-counter {
+    animation: none !important;
   }
 }

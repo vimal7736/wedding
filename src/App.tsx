@@ -6,22 +6,20 @@ import { OrbitingImages } from './components/OrbitingImages';
 
 function App() {
   return (
-    <main className="relative min-h-screen w-full flex flex-col items-center justify-start py-12 px-4 overflow-hidden bg-[var(--color-olive-deep)]">
-
-
+    <main className="relative min-h-screen w-full flex flex-col items-center justify-start py-6 sm:py-12 px-3 sm:px-4 overflow-x-hidden bg-[var(--color-olive-deep)]">
       <OrbitingImages />
       <FallingParticles />
       <AudioPlayer />
       
       {/* Elegant Header */}
-      <div className="relative z-10 text-center mb-2 mt-16 select-none pointer-events-none">
-        <span className="font-['Cinzel'] text-[11px] md:text-[13px] tracking-[0.5em] text-[var(--color-beige-warm)] font-bold uppercase opacity-95 block mb-3">
+      <div className="relative z-10 text-center mb-1 mt-10 sm:mt-16 select-none pointer-events-none px-2">
+        <span className="font-['Cinzel'] text-[10px] md:text-[13px] tracking-[0.4em] sm:tracking-[0.5em] text-[var(--color-beige-warm)] font-bold uppercase opacity-95 block mb-2 sm:mb-3">
           Wedding Invitation
         </span>
-        <h2 className="font-['Cormorant_Garamond'] italic text-3xl md:text-5xl text-[var(--color-beige-paper)] font-light tracking-wide">
+        <h2 className="font-['Cormorant_Garamond'] italic text-[28px] sm:text-3xl md:text-5xl text-[var(--color-beige-paper)] font-light tracking-wide">
           Vimal & Aishwariya
         </h2>
-        <div className="w-16 h-[1px] bg-[rgba(169,138,75,0.35)] mx-auto mt-4" />
+        <div className="w-16 h-[1px] bg-[rgba(169,138,75,0.35)] mx-auto mt-3 sm:mt-4" />
       </div>
 
       <InvitationCard />

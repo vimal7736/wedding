@@ -66,7 +66,7 @@ export const AudioPlayer = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ delay: 1.5 }}
-            className="fixed bottom-24 right-5 z-50 flex flex-col items-center gap-1 pointer-events-none"
+            className="fixed bottom-20 right-4 sm:bottom-24 sm:right-5 z-50 flex flex-col items-center gap-1 pointer-events-none"
           >
             <span className="font-['Cormorant_Garamond'] italic text-[13px] text-[var(--color-gold-line)] opacity-80 whitespace-nowrap">
               tap to start music
@@ -86,15 +86,10 @@ export const AudioPlayer = () => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1, duration: 0.6 }}
-        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full border border-[rgba(169,138,75,0.4)]"
+        className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-[rgba(169,138,75,0.4)]"
         style={{
-          background: 'rgba(18, 24, 12, 0.75)',
-          backdropFilter: 'blur(10px)',
-          boxShadow: [
-            'inset 3px 3px 8px rgba(0,0,0,0.7)',
-            'inset -2px -2px 6px rgba(255,255,255,0.06)',
-            '0 6px 20px rgba(0,0,0,0.4)',
-          ].join(', '),
+          background: 'rgba(18, 24, 12, 0.85)',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.35)',
         }}
       >
         <AnimatePresence mode="wait">

@@ -26,23 +26,23 @@ export const Itinerary = () => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-50px" }}
-      className="w-full max-w-lg mx-auto mt-16 mb-12 relative"
+      className="w-full max-w-lg mx-auto mt-10 sm:mt-16 mb-8 sm:mb-12 relative px-1"
     >
-      <div className="text-center mb-8 font-['Cinzel'] text-[14px] tracking-[6px] text-[var(--color-olive-deep)] uppercase">
+      <div className="text-center mb-6 sm:mb-8 font-['Cinzel'] text-[12px] sm:text-[14px] tracking-[4px] sm:tracking-[6px] text-[var(--color-olive-deep)] uppercase">
         Evening Flow
       </div>
 
-      <div className="relative border-l border-[rgba(169,138,75,0.3)] ml-4 md:ml-8 pl-8 md:pl-12 py-4">
+      <div className="relative border-l border-[rgba(169,138,75,0.3)] ml-3 sm:ml-4 md:ml-8 pl-6 sm:pl-8 md:pl-12 py-2 sm:py-4">
         {events.map((event, idx) => (
-          <motion.div key={idx} variants={itemVariants} className="mb-10 relative">
-            <div className="absolute w-3 h-3 bg-[var(--color-olive-deep)] rounded-full -left-[38px] md:-left-[54px] top-1.5 shadow-[0_0_8px_rgba(74,90,55,0.4)]" />
+          <motion.div key={idx} variants={itemVariants} className="mb-8 sm:mb-10 relative">
+            <div className="absolute w-2.5 h-2.5 sm:w-3 sm:h-3 bg-[var(--color-olive-deep)] rounded-full -left-[29px] sm:-left-[38px] md:-left-[54px] top-1.5" />
             <div className="font-['Cinzel'] text-[11px] md:text-[13px] text-[var(--color-olive-deep)] mb-1 tracking-[4px] uppercase">
               {event.label}
             </div>
-            <div className="font-['Cormorant_Garamond'] text-[24px] md:text-[28px] text-[var(--color-olive-deep)] font-semibold leading-none mb-2">
+            <div className="font-['Cormorant_Garamond'] text-[20px] sm:text-[24px] md:text-[28px] text-[var(--color-olive-deep)] font-semibold leading-none mb-2">
               {event.title}
             </div>
-            <div className="font-['Jost'] text-[14px] md:text-[16px] text-[var(--color-ink)] opacity-80 font-light leading-relaxed">
+            <div className="font-['Jost'] text-[13px] sm:text-[14px] md:text-[16px] text-[var(--color-ink)] opacity-80 font-light leading-relaxed">
               {event.desc}
             </div>
           </motion.div>
