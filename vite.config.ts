@@ -5,4 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: {
+    // maplibre ships its own worker; Vite's dep optimizer breaks it
+    exclude: ['maplibre-gl'],
+  },
 })

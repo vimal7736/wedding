@@ -37,6 +37,26 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(169, 138, 75, 0.55) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(169, 138, 75, 0.5);
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(169, 138, 75, 0.75);
   }
   
   html {
@@ -63,6 +83,7 @@
   .glass-card {
     background: linear-gradient(180deg, #fbf7ef 0%, #f2ead9 100%);
     box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(169, 138, 75, 0.2);
+    isolation: isolate;
   }
 
   .glass-card::before {
@@ -118,4 +139,13 @@
   .orbit-counter {
     animation: none !important;
   }
+}
+
+/* MapLibre must fill the journey screen */
+.map-journey-canvas,
+.map-journey-canvas .maplibregl-map,
+.map-journey-canvas .maplibregl-canvas-container,
+.map-journey-canvas .maplibregl-canvas {
+  width: 100% !important;
+  height: 100% !important;
 }

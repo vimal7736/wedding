@@ -5,7 +5,7 @@ export const AddToCalendar = () => {
   const handleDownloadIcs = () => {
     const event = {
       title: "Aishwariya & Vimal's Wedding Reception",
-      description: "Join us for an evening of joy, laughter and celebration as we welcome you to our wedding reception.",
+      description: "Join us for joy, laughter and celebrations as we welcome you to our wedding & reception.",
       location: "PV Garden, Bilathikulam, Calicut",
       startDate: "20261101T183000",
       endDate: "20261101T230000"
