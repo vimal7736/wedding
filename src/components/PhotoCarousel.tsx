@@ -30,12 +30,7 @@ export const PhotoCarousel = () => {
       </svg>
 
       <div className="relative flex items-center justify-center w-[min(78vw,280px)] aspect-square">
-        <div
-          className="relative z-10 w-[84%] h-[84%]"
-          style={{
-            filter: 'drop-shadow(3px 3px 8px rgba(0,0,0,0.12))',
-          }}
-        >
+        <div className="relative z-10 w-[84%] h-[84%]">
           <AnimatePresence mode="wait" initial={false}>
             <motion.img
               key={currentIndex}

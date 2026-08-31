@@ -1,107 +1,39 @@
-import { useRef } from 'react';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  useReducedMotion,
-} from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Hills, KolamDivider, MapLeaf, FooterLeaf } from './Icons';
 import { CountdownTimer } from './CountdownTimer';
 import { PhotoCarousel } from './PhotoCarousel';
 import { Itinerary } from './Itinerary';
+import { Reveal } from './Reveal';
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-};
+const EASE = [0.22, 1, 0.36, 1] as const;
+const STATIC_BORDER = 'rgba(169,138,75,0.35)';
 
 export const InvitationCard = () => {
-  const cardRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 28,
-    restDelta: 0.001,
-  });
-
-  const yFar = useTransform(smooth, [0, 1], reduceMotion ? [0, 0] : [36, -36]);
-  const yMid = useTransform(smooth, [0, 1], reduceMotion ? [0, 0] : [20, -20]);
-  const yNear = useTransform(smooth, [0, 1], reduceMotion ? [0, 0] : [10, -10]);
-  const yNames = useTransform(smooth, [0, 1], reduceMotion ? [0, 0] : [16, -28]);
-  const yHills = useTransform(smooth, [0, 1], reduceMotion ? [0, 0] : [28, -40]);
-  const scaleCard = useTransform(smooth, [0, 0.35, 0.7, 1], reduceMotion ? [1, 1, 1, 1] : [0.98, 1, 1, 0.99]);
-  const rotateY = useTransform(smooth, [0, 0.5, 1], reduceMotion ? [0, 0, 0] : [0.8, 0, -0.8]);
-  const borderColor = useTransform(
-    smooth,
-    [0, 0.4, 0.7, 1],
-    reduceMotion
-      ? [
-          'rgba(169,138,75,0.35)',
-          'rgba(169,138,75,0.35)',
-          'rgba(169,138,75,0.35)',
-          'rgba(169,138,75,0.35)',
-        ]
-      : [
-          'rgba(169,138,75,0.25)',
-          'rgba(169,138,75,0.55)',
-          'rgba(169,138,75,0.55)',
-          'rgba(169,138,75,0.3)',
-        ],
-  );
-
   return (
-    <div
-      ref={cardRef}
-      className="relative w-full max-w-6xl mx-auto z-10 px-1 pt-4 sm:p-4 sm:pt-8 md:p-12 mt-2 sm:mt-4"
-      style={{ perspective: 1400 }}
-    >
-      {/* Depth shadow layer — drifts slower behind the card */}
+    <div className="relative w-full max-w-6xl mx-auto z-10 px-1 pt-4 sm:p-4 sm:pt-8 md:p-12 mt-2 sm:mt-4">
       <motion.div
-        className="absolute inset-6 sm:inset-10 md:inset-14 rounded-xl pointer-events-none -z-[1]"
-        style={{
-          y: yFar,
-          background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.28), transparent 70%)',
-          filter: 'blur(28px)',
-        }}
-        aria-hidden
-      />
-
-      <motion.div
-        className="glass-card rounded-xl overflow-visible will-change-transform"
-        style={{ y: yNear, scale: scaleCard, rotateY }}
-        initial={{ opacity: 0, y: 24 }}
+        className="glass-card rounded-xl overflow-visible"
+        initial={reduceMotion ? false : { opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
+        transition={
+          reduceMotion
+            ? { duration: 0.2 }
+            : { duration: 1.15, ease: EASE, delay: 0.12 }
+        }
       >
-        <motion.div
+        <div
           className="relative m-2 sm:m-4 md:m-6 border p-1.5 sm:p-2"
-          style={{ borderColor }}
+          style={{ borderColor: STATIC_BORDER }}
         >
-          {/* Parallax gold border sheen */}
-          <motion.div
+          <div
             className="absolute inset-[4px] sm:inset-[6px] border pointer-events-none"
-            style={{
-              y: yMid,
-              borderColor: 'rgba(169,138,75,0.35)',
-            }}
+            style={{ borderColor: 'rgba(169,138,75,0.35)' }}
           />
 
           <div className="relative px-3 py-6 sm:px-6 sm:py-8 md:px-10 md:py-12 flex flex-col items-center text-center w-full min-w-0">
-            {/* Top tagline */}
-            <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-              className="w-full text-center mb-6 sm:mb-8"
-              style={{ y: yMid }}
-            >
+            <Reveal delay={0.2} y={24} duration={1.2} className="w-full text-center mb-6 sm:mb-8">
               <p className="font-['Cormorant_Garamond'] italic text-[20px] sm:text-[24px] md:text-[32px] text-[var(--color-olive-deep)] leading-snug px-1">
                 Celebrate the start of our forever
               </p>
@@ -115,43 +47,27 @@ export const InvitationCard = () => {
               <p className="font-['Cormorant_Garamond'] text-[12px] md:text-[15px] tracking-[3px] sm:tracking-[4px] text-[var(--color-olive-mid)] uppercase mt-3">
                 ✦ &nbsp; Vimal &nbsp; & &nbsp; Aishu &nbsp; ✦
               </p>
-            </motion.div>
+            </Reveal>
 
-            <motion.div style={{ y: yHills }} className="w-full flex justify-center">
+            <Reveal delay={0.35} y={20} duration={1.25} className="w-full flex justify-center">
               <Hills className="w-full max-w-[400px] h-auto mx-auto mb-4 opacity-90" />
-            </motion.div>
+            </Reveal>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
+            <Reveal
+              delay={0.08}
               className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] tracking-[4px] text-[var(--color-olive-deep)] uppercase mt-2 font-medium"
             >
               Together with their families
-            </motion.div>
+            </Reveal>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
+            <Reveal
+              delay={0.12}
               className="mt-4 font-['Cormorant_Garamond'] italic text-[16px] md:text-[19px] tracking-[0.5px] text-[var(--color-ink)] opacity-80"
             >
               Invited by their parents
-            </motion.div>
+            </Reveal>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="mt-8 flex flex-col gap-6 md:gap-8 items-center w-full"
-              style={{ y: yNames }}
-            >
+            <Reveal delay={0.1} y={36} duration={1.2} className="mt-8 flex flex-col gap-6 md:gap-8 items-center w-full">
               <div className="flex flex-col items-center">
                 <span className="font-['Cormorant_Garamond'] text-xl sm:text-2xl md:text-4xl text-[var(--color-olive-deep)] font-semibold tracking-wide">
                   Vimal Suresh
@@ -171,75 +87,42 @@ export const InvitationCard = () => {
                   Beloved daughter of Balu & Tamil Selvi
                 </span>
               </div>
-            </motion.div>
+            </Reveal>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="w-[180px] my-10"
-              style={{ y: yMid }}
-            >
+            <Reveal delay={0.05} y={20} className="w-[180px] my-10">
               <KolamDivider className="w-full" />
-            </motion.div>
+            </Reveal>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
-              className="w-full"
-              style={{ y: yNear }}
-            >
+            <Reveal y={40} duration={1.25} className="w-full">
               <PhotoCarousel />
-            </motion.div>
+            </Reveal>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15, duration: 0.7, ease: 'easeOut' }}
-              viewport={{ once: true }}
-              className="font-['Cormorant_Garamond'] font-semibold text-[clamp(22px,7vw,64px)] leading-[1.25] text-[var(--color-olive-deep)] mt-4 sm:mt-6 px-1"
-              style={{ y: yNames }}
-            >
-              Vimal{' '}
-              <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.5em] text-[var(--color-ink)] px-[6px] md:px-[15px] align-middle">
-                weds
-              </span>{' '}
-              Aishwariya
-            </motion.h1>
+            <Reveal y={36} duration={1.2}>
+              <h1 className="font-['Cormorant_Garamond'] font-semibold text-[clamp(22px,7vw,64px)] leading-[1.25] text-[var(--color-olive-deep)] mt-4 sm:mt-6 px-1">
+                Vimal{' '}
+                <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.5em] text-[var(--color-ink)] px-[6px] md:px-[15px] align-middle">
+                  weds
+                </span>{' '}
+                Aishwariya
+              </h1>
+            </Reveal>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.8 }}
+            <Reveal
+              delay={0.1}
               className="mt-6 font-['Cormorant_Garamond'] text-[15px] md:text-[17px] tracking-[3px] uppercase text-[var(--color-ink)] opacity-80 font-medium"
             >
               You are cordially invited
-            </motion.div>
+            </Reveal>
 
             <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              whileInView={{ opacity: 1, width: 100 }}
-              transition={{ delay: 0.9, duration: 1, ease: 'easeOut' }}
-              viewport={{ once: true }}
-              className="h-[1px] bg-[var(--color-gold-line)] my-10 mx-auto"
+              initial={reduceMotion ? false : { opacity: 0, scaleX: 0 }}
+              whileInView={reduceMotion ? undefined : { opacity: 1, scaleX: 1 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 1.25, ease: EASE }}
+              className="h-[1px] w-[100px] bg-[var(--color-gold-line)] my-10 mx-auto origin-center"
             />
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 0.95 }}
-              className="w-full max-w-xl mx-auto mb-6 sm:mb-10 px-0 sm:px-2"
-              style={{ y: yMid }}
-            >
+            <Reveal y={36} duration={1.2} className="w-full max-w-xl mx-auto mb-6 sm:mb-10 px-0 sm:px-2">
               <p className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] sm:tracking-[4px] text-[var(--color-gold-line)] uppercase font-semibold mb-3 sm:mb-4">
                 Wedding Ceremony
               </p>
@@ -271,37 +154,32 @@ export const InvitationCard = () => {
                   Open in Maps
                 </a>
               </div>
-            </motion.div>
+            </Reveal>
 
-            <motion.p
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 1.0 }}
+            <Reveal
+              y={28}
               className="font-['Cormorant_Garamond'] text-[18px] md:text-[22px] leading-[1.8] text-[var(--color-ink)] max-w-[600px] mx-auto font-light"
             >
               Join us for an evening of joy, laughter and celebration as we welcome you to our
               wedding reception — a warm gathering to celebrate our new beginning together.
-            </motion.p>
+            </Reveal>
 
-            <CountdownTimer />
+            <Reveal y={36} duration={1.15} className="w-full">
+              <CountdownTimer />
+            </Reveal>
 
             <Itinerary />
 
             <div className="w-full max-w-4xl mx-auto mt-8 sm:mt-12 mb-4 sm:mb-6 px-0 sm:px-2">
-              <p className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] sm:tracking-[4px] text-[var(--color-gold-line)] uppercase font-semibold mb-4 sm:mb-6 text-center">
+              <Reveal className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] sm:tracking-[4px] text-[var(--color-gold-line)] uppercase font-semibold mb-4 sm:mb-6 text-center">
                 Reception · Calicut
-              </p>
+              </Reveal>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 items-stretch relative">
-                <motion.div
-                  variants={fadeInUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 }}
+                <Reveal
+                  delay={0}
+                  y={40}
+                  duration={1.15}
                   className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
-                  style={{ y: yFar }}
                 >
                   <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
                   <div className="flex flex-col items-center gap-1">
@@ -329,16 +207,13 @@ export const InvitationCard = () => {
                       Evening
                     </span>
                   </div>
-                </motion.div>
+                </Reveal>
 
-                <motion.div
-                  variants={fadeInUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.15 }}
+                <Reveal
+                  delay={0.12}
+                  y={40}
+                  duration={1.15}
                   className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
-                  style={{ y: yMid }}
                 >
                   <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
                   <div className="flex flex-col items-center gap-1">
@@ -352,16 +227,13 @@ export const InvitationCard = () => {
                       Bilathikulam, Calicut
                     </span>
                   </div>
-                </motion.div>
+                </Reveal>
 
-                <motion.div
-                  variants={fadeInUp}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 }}
+                <Reveal
+                  delay={0.24}
+                  y={40}
+                  duration={1.15}
                   className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
-                  style={{ y: yNear }}
                 >
                   <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
 
@@ -379,23 +251,15 @@ export const InvitationCard = () => {
                       Tap to open Maps
                     </span>
                   </a>
-                </motion.div>
+                </Reveal>
               </div>
             </div>
 
-            <motion.div
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              transition={{ delay: 1.4 }}
-              className="w-[120px] mt-16 mx-auto"
-              style={{ y: yFar }}
-            >
+            <Reveal delay={0.05} y={24} className="w-[120px] mt-16 mx-auto">
               <FooterLeaf className="w-full" />
-            </motion.div>
+            </Reveal>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     </div>
   );

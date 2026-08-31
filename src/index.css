@@ -63,6 +63,13 @@
     scroll-behavior: smooth;
   }
 
+  @media (max-width: 768px), (hover: none) and (pointer: coarse) {
+    html {
+      /* Native finger scroll — CSS smooth-scroll feels laggy on phones */
+      scroll-behavior: auto;
+    }
+  }
+
   body {
     background: var(--olive-deep);
     font-family: 'Jost', sans-serif;
@@ -82,7 +89,7 @@
 @layer utilities {
   .glass-card {
     background: linear-gradient(180deg, #fbf7ef 0%, #f2ead9 100%);
-    box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(169, 138, 75, 0.2);
+    box-shadow: none;
     isolation: isolate;
   }
 
@@ -138,6 +145,15 @@
   .orbit-ring,
   .orbit-counter {
     animation: none !important;
+  }
+}
+
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  .fall-particle,
+  .orbit-ring,
+  .orbit-counter {
+    animation: none !important;
+    will-change: auto;
   }
 }
 
