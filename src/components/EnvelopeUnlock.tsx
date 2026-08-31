@@ -213,25 +213,39 @@ export const EnvelopeUnlock = ({ onOpened }: EnvelopeUnlockProps) => {
                   style={{
                     width: 42,
                     height: 42,
-                    background:
-                      'radial-gradient(circle at 35% 30%, #c4a05a 0%, #8b6b2e 45%, #5c4518 100%)',
+                    background: `
+                      repeating-conic-gradient(
+                        from 0deg,
+                        #f7f2e8 0deg 6deg,
+                        #ebe4d6 6deg 12deg
+                      )
+                    `,
                     boxShadow:
-                      '0 3px 10px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255,255,255,0.25), inset 0 -2px 3px rgba(0,0,0,0.25)',
+                      '0 3px 10px rgba(0,0,0,0.28), inset 0 1px 2px rgba(255,255,255,0.7), inset 0 -2px 4px rgba(80,70,50,0.18)',
                   }}
                   animate={{ scale: [1, 1.06, 1] }}
                   transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
                 >
+                  {/* Soft dome + groove depth */}
                   <div
-                    className="absolute inset-[-3px] rounded-full opacity-80"
+                    className="absolute inset-0 rounded-full pointer-events-none"
                     style={{
                       background:
-                        'repeating-conic-gradient(from 0deg, #8b6b2e 0deg 8deg, #a98a4b 8deg 16deg)',
-                      mask: 'radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px))',
-                      WebkitMask:
-                        'radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px))',
+                        'radial-gradient(circle at 32% 28%, rgba(255,255,255,0.55) 0%, transparent 42%, rgba(90,78,55,0.12) 100%)',
                     }}
                   />
-                  <span className="relative font-['Cormorant_Garamond'] text-[10px] font-semibold text-[#f7f0e2] tracking-wide select-none">
+                  {/* Outer rim grooves */}
+                  <div
+                    className="absolute inset-[-2px] rounded-full opacity-90 pointer-events-none"
+                    style={{
+                      background:
+                        'repeating-conic-gradient(from 0deg, #e8e0d2 0deg 5deg, #d9d0c0 5deg 10deg)',
+                      mask: 'radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px))',
+                      WebkitMask:
+                        'radial-gradient(farthest-side, transparent calc(100% - 5px), #000 calc(100% - 4px))',
+                    }}
+                  />
+                  <span className="relative font-['Cormorant_Garamond'] text-[10px] font-semibold text-[#4a5a37] tracking-wide select-none">
                     V
                     <span className="text-[6px] mx-0.5 opacity-90">♥</span>A
                   </span>

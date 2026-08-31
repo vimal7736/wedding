@@ -27,6 +27,65 @@ const CALICUT = ROUTE[0];
 const DINDIGUL = ROUTE[ROUTE.length - 1];
 const OVERVIEW: [number, number] = [76.7, 10.85];
 
+type Checkpoint = {
+  name: string;
+  region: string;
+  coord: [number, number];
+  /** Exact progress along ROUTE (0–1) when the tip arrives here */
+  at: number;
+};
+
+function segmentLen(a: [number, number], b: [number, number]) {
+  const A = maplibregl.MercatorCoordinate.fromLngLat({ lng: a[0], lat: a[1] });
+  const B = maplibregl.MercatorCoordinate.fromLngLat({ lng: b[0], lat: b[1] });
+  return Math.hypot(B.x - A.x, B.y - A.y);
+}
+
+function progressAtRouteIndex(index: number) {
+  const total = routeLength(ROUTE);
+  if (total <= 0 || index <= 0) return 0;
+  let walked = 0;
+  for (let i = 1; i <= index && i < ROUTE.length; i++) {
+    walked += segmentLen(ROUTE[i - 1], ROUTE[i]);
+  }
+  return walked / total;
+}
+
+/** Places the tip visits — tooltip pops only when the tip arrives. */
+const CHECKPOINTS: Checkpoint[] = (
+  [
+    { name: 'Calicut', region: 'Kerala', routeIndex: 0 },
+    { name: 'Malappuram', region: 'Kerala', routeIndex: 1 },
+    { name: 'Palakkad', region: 'Kerala', routeIndex: 3 },
+    { name: 'Pollachi', region: 'Tamil Nadu', routeIndex: 5 },
+    { name: 'Oddanchatram', region: 'Tamil Nadu', routeIndex: 7 },
+    { name: 'Dindigul', region: 'Tamil Nadu', routeIndex: 8 },
+  ] as const
+).map((d) => ({
+  name: d.name,
+  region: d.region,
+  coord: ROUTE[d.routeIndex],
+  at: progressAtRouteIndex(d.routeIndex),
+}));
+
+function createCheckpointEl(cp: Checkpoint, index: number) {
+  const el = document.createElement('div');
+  el.className = 'journey-cp';
+  el.dataset.checkpoint = String(index);
+  el.innerHTML = `
+    <div class="journey-cp-card">
+      <span class="journey-cp-step">${String(index + 1).padStart(2, '0')}</span>
+      <div>
+        <div class="journey-cp-name">${cp.name}</div>
+        <div class="journey-cp-region">${cp.region}</div>
+      </div>
+    </div>
+    <div class="journey-cp-stem"></div>
+    <div class="journey-cp-dot"></div>
+  `;
+  return el;
+}
+
 /** Esri World Street Map — free, no API key watermark */
 const MAP_STYLE: maplibregl.StyleSpecification = {
   version: 8,
@@ -115,6 +174,14 @@ function pointAlongRoute(coords: [number, number][], t: number): [number, number
   return coords[coords.length - 1];
 }
 
+function easeInOut(t: number) {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
+
 function bearing(a: [number, number], b: [number, number]) {
   const toRad = Math.PI / 180;
   const φ1 = a[1] * toRad;
@@ -126,38 +193,39 @@ function bearing(a: [number, number], b: [number, number]) {
 }
 
 function lerpAngle(a: number, b: number, t: number) {
-  let diff = ((b - a + 540) % 360) - 180;
+  const diff = ((b - a + 540) % 360) - 180;
   return (a + diff * t + 360) % 360;
 }
 
-function easeInOut(t: number) {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-}
+/** Slice route from start through progress t (0–1), always including the tip point. */
+function routeSlice(coords: [number, number][], t: number): [number, number][] {
+  const tip = pointAlongRoute(coords, t);
+  if (t <= 0) return [coords[0], tip];
 
-function createCarEl() {
-  const el = document.createElement('div');
-  el.className = 'journey-car';
-  // Drawn nose-up so it faces direction of travel with the follow camera
-  el.innerHTML = `
-    <svg width="18" height="30" viewBox="0 0 18 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="4" y="6" width="10" height="20" rx="2" fill="#4a5a37"/>
-      <path d="M5 10 L9 3 L13 10 Z" fill="#6b7d51"/>
-      <rect x="6.5" y="5" width="5" height="3.5" rx="0.5" fill="#e8dcc0" opacity="0.95"/>
-      <circle cx="4" cy="11" r="2" fill="#1a1a1a"/>
-      <circle cx="4" cy="11" r="0.8" fill="#c8a96e"/>
-      <circle cx="14" cy="11" r="2" fill="#1a1a1a"/>
-      <circle cx="14" cy="11" r="0.8" fill="#c8a96e"/>
-      <circle cx="4" cy="22" r="2" fill="#1a1a1a"/>
-      <circle cx="4" cy="22" r="0.8" fill="#c8a96e"/>
-      <circle cx="14" cy="22" r="2" fill="#1a1a1a"/>
-      <circle cx="14" cy="22" r="0.8" fill="#c8a96e"/>
-      <circle cx="7" cy="4.2" r="1" fill="#f2ead9"/>
-      <circle cx="11" cy="4.2" r="1" fill="#f2ead9"/>
-    </svg>
-  `;
-  el.style.cssText =
-    'width:18px;height:30px;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.45));pointer-events:none;';
-  return el;
+  const total = routeLength(coords);
+  const target = total * Math.min(1, Math.max(0, t));
+  const out: [number, number][] = [coords[0]];
+  let walked = 0;
+
+  for (let i = 1; i < coords.length; i++) {
+    const a = maplibregl.MercatorCoordinate.fromLngLat({
+      lng: coords[i - 1][0],
+      lat: coords[i - 1][1],
+    });
+    const b = maplibregl.MercatorCoordinate.fromLngLat({
+      lng: coords[i][0],
+      lat: coords[i][1],
+    });
+    const seg = Math.hypot(b.x - a.x, b.y - a.y);
+    if (walked + seg >= target) {
+      out.push(tip);
+      return out;
+    }
+    out.push(coords[i]);
+    walked += seg;
+  }
+  out.push(tip);
+  return out;
 }
 
 function flyTo(
@@ -178,49 +246,118 @@ function flyTo(
   });
 }
 
-function animateRoute(
+function createTipEl() {
+  const el = document.createElement('div');
+  el.className = 'journey-tip';
+  el.innerHTML = '<span class="journey-tip-core"></span><span class="journey-tip-ring"></span>';
+  return el;
+}
+
+function animateDottedRoute(
   map: maplibregl.Map,
-  carMarker: maplibregl.Marker,
+  tipMarker: maplibregl.Marker,
   durationMs: number,
   onProgress: (p: number) => void,
+  onCheckpoint: (cp: Checkpoint) => void,
   cancelled: () => boolean,
 ): Promise<void> {
   return new Promise((resolve) => {
     const start = performance.now();
-    let lng = CALICUT[0];
-    let lat = CALICUT[1];
-    let brg = bearing(ROUTE[0], ROUTE[1]);
+    let camLng = map.getCenter().lng;
+    let camLat = map.getCenter().lat;
+    let camZoom = map.getZoom();
+    let camPitch = map.getPitch();
+    let camBearing = map.getBearing();
+    let drawT = 0.002;
+    let lastNow = start;
+    let lastProgressAt = 0;
+    let nextCp = 0;
 
     const tick = (now: number) => {
       if (cancelled()) {
         resolve();
         return;
       }
+
+      const dt = Math.min(0.05, Math.max(0.001, (now - lastNow) / 1000));
+      lastNow = now;
+
+      // Gentler ease — slower feel at start/end, steady mid-travel
       const raw = Math.min(1, (now - start) / durationMs);
-      const t = easeInOut(raw);
-      onProgress(t);
+      const targetT = raw < 0.5
+        ? 2 * raw * raw
+        : 1 - Math.pow(-2 * raw + 2, 2) / 2;
 
-      const here = pointAlongRoute(ROUTE, t);
-      const ahead = pointAlongRoute(ROUTE, Math.min(1, t + 0.015));
-      const targetBrg = bearing(here, ahead);
+      // Tip lags slightly so the line draws silk-smooth
+      const drawFollow = 1 - Math.pow(0.00008, dt);
+      drawT = lerp(drawT, Math.max(0.002, targetT), drawFollow);
 
-      lng += (here[0] - lng) * 0.07;
-      lat += (here[1] - lat) * 0.07;
-      brg = lerpAngle(brg, targetBrg, 0.05);
+      if (now - lastProgressAt > 90 || raw >= 1) {
+        lastProgressAt = now;
+        onProgress(drawT);
+      }
 
-      carMarker.setLngLat(here);
+      const slice = routeSlice(ROUTE, drawT);
+      const tip = slice[slice.length - 1];
+      const ahead = pointAlongRoute(ROUTE, Math.min(1, drawT + 0.035));
+      const targetBrg = bearing(tip, ahead);
+
+      // Pop tooltip exactly when the tip arrives at this stop
+      while (nextCp < CHECKPOINTS.length && drawT >= CHECKPOINTS[nextCp].at) {
+        onCheckpoint(CHECKPOINTS[nextCp]);
+        nextCp += 1;
+      }
+
+      const src = map.getSource('route-progress') as maplibregl.GeoJSONSource | undefined;
+      src?.setData({
+        type: 'Feature',
+        properties: {},
+        geometry: { type: 'LineString', coordinates: slice },
+      });
+
+      tipMarker.setLngLat(tip);
+
+      // Soft breathing glow on the trail
+      const breath = 0.28 + Math.sin(now / 520) * 0.08;
+      if (map.getLayer('route-progress-glow')) {
+        map.setPaintProperty('route-progress-glow', 'line-opacity', breath);
+      }
+
+      const targetZoom = lerp(10.1, 8.7, Math.min(1, drawT * 1.15));
+      const targetPitch = lerp(50, 45, drawT);
+
+      // Softer chase — less snap, more glide
+      const follow = 1 - Math.pow(0.00012, dt);
+      const zoomFollow = 1 - Math.pow(0.0009, dt);
+      const brgFollow = 1 - Math.pow(0.0018, dt);
+
+      camLng = lerp(camLng, tip[0], follow);
+      camLat = lerp(camLat, tip[1], follow);
+      camZoom = lerp(camZoom, targetZoom, zoomFollow);
+      camPitch = lerp(camPitch, targetPitch, zoomFollow);
+      camBearing = lerpAngle(camBearing, targetBrg, brgFollow);
 
       map.jumpTo({
-        center: [lng, lat],
-        zoom: 9.2 + t * 0.7,
-        pitch: 52,
-        bearing: brg,
+        center: [camLng, camLat],
+        zoom: camZoom,
+        pitch: camPitch,
+        bearing: camBearing,
       });
 
       if (raw < 1) {
         requestAnimationFrame(tick);
       } else {
-        carMarker.setLngLat(DINDIGUL);
+        onProgress(1);
+        while (nextCp < CHECKPOINTS.length) {
+          onCheckpoint(CHECKPOINTS[nextCp]);
+          nextCp += 1;
+        }
+        tipMarker.setLngLat(DINDIGUL);
+        src?.setData({
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'LineString', coordinates: ROUTE },
+        });
         resolve();
       }
     };
@@ -239,6 +376,7 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
   const [mapReady, setMapReady] = useState(false);
   const [showBlessing, setShowBlessing] = useState(false);
   const [started, setStarted] = useState(false);
+  const [activeStop, setActiveStop] = useState<Checkpoint | null>(null);
   const storyStartedRef = useRef(false);
   const mapLoadedRef = useRef(false);
   const runStoryRef = useRef<(() => Promise<void>) | null>(null);
@@ -296,64 +434,94 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         },
       });
 
+      // Faint full corridor (ghost path)
       map.addLayer({
-        id: 'route-glow',
+        id: 'route-ghost',
         type: 'line',
         source: 'route',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
           'line-color': '#c8a96e',
-          'line-width': 14,
-          'line-opacity': 0.4,
-          'line-blur': 4,
+          'line-width': 2.5,
+          'line-opacity': 0.28,
+          'line-dasharray': [0.8, 1.6],
+        },
+      });
+
+      map.addSource('route-progress', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'LineString', coordinates: [CALICUT, CALICUT] },
         },
       });
 
       map.addLayer({
-        id: 'route-line',
+        id: 'route-progress-glow',
         type: 'line',
-        source: 'route',
+        source: 'route-progress',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': '#8b6914',
-          'line-width': 4.5,
-          'line-opacity': 1,
+          'line-color': '#c8a96e',
+          'line-width': 12,
+          'line-opacity': 0.32,
+          'line-blur': 4,
         },
       });
 
-      const carMarker = new maplibregl.Marker({
-        element: createCarEl(),
+      // Animated dotted path toward Dindigul
+      map.addLayer({
+        id: 'route-progress-dots',
+        type: 'line',
+        source: 'route-progress',
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: {
+          'line-color': '#a98a4b',
+          'line-width': 3.5,
+          'line-opacity': 0.95,
+          'line-dasharray': [0.5, 1.6],
+        },
+      });
+
+      const tipMarker = new maplibregl.Marker({
+        element: createTipEl(),
         anchor: 'center',
-        rotationAlignment: 'viewport',
-        pitchAlignment: 'viewport',
       })
         .setLngLat(CALICUT)
         .addTo(map);
 
-      const startMarker = new maplibregl.Marker({ color: '#4a5a37' })
-        .setLngLat(CALICUT)
-        .setPopup(
-          new maplibregl.Popup({ offset: 18, closeButton: false }).setHTML(
-            '<div style="font-family:Cormorant Garamond,serif;font-size:14px;padding:2px 4px"><strong>Calicut</strong><br/><span style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;opacity:0.7">Kerala</span></div>',
-          ),
-        )
-        .addTo(map);
+      const checkpointMarkers = CHECKPOINTS.map((cp, i) => {
+        const el = createCheckpointEl(cp, i);
+        return new maplibregl.Marker({ element: el, anchor: 'bottom', offset: [0, -2] })
+          .setLngLat(cp.coord)
+          .addTo(map);
+      });
 
-      const endMarker = new maplibregl.Marker({ color: '#a98a4b' })
-        .setLngLat(DINDIGUL)
-        .setPopup(
-          new maplibregl.Popup({ offset: 18, closeButton: false }).setHTML(
-            '<div style="font-family:Cormorant Garamond,serif;font-size:14px;padding:2px 4px"><strong>Dindigul</strong><br/><span style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;opacity:0.7">Tamil Nadu</span></div>',
-          ),
-        )
-        .addTo(map);
+      let lastCpIndex = -1;
+      const revealCheckpoint = (cp: Checkpoint) => {
+        const index = CHECKPOINTS.indexOf(cp);
+        if (index < 0 || index === lastCpIndex) return;
+        if (lastCpIndex >= 0) {
+          const prev = checkpointMarkers[lastCpIndex].getElement();
+          prev.classList.remove('is-visible');
+          prev.classList.add('is-passed');
+        }
+        const el = checkpointMarkers[index].getElement();
+        el.classList.remove('is-passed', 'is-visible');
+        // Restart pop animation when the tip arrives
+        void el.offsetWidth;
+        el.classList.add('is-visible');
+        lastCpIndex = index;
+        setActiveStop(cp);
+      };
 
       setScene('overview');
       setProgress(0.05);
-      await wait(900);
+      await wait(500);
       if (cancelledRef.current) return;
 
-      // 1) Slow camera into Calicut
+      // 1) Zoom into Calicut
       setScene('calicut');
       setProgress(0.12);
       await flyTo(map, {
@@ -361,59 +529,61 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         zoom: 10.4,
         pitch: 52,
         bearing: 35,
-        duration: 4800,
-        curve: 1.4,
-        speed: 0.35,
+        duration: 3200,
+        curve: 1.3,
+        speed: 0.45,
         easing: easeInOut,
       });
       if (cancelledRef.current) return;
-      startMarker.togglePopup();
-      setProgress(0.22);
-      await wait(1600);
+      setProgress(0.2);
+      await wait(800);
       if (cancelledRef.current) return;
 
-      // 2) Soft travel along the road
+      // 2) Dotted line draws — tooltips pop only when the tip reaches each place
       setScene('road');
-      startMarker.getPopup()?.remove();
-      await animateRoute(
+      await animateDottedRoute(
         map,
-        carMarker,
-        16000,
-        (p) => setProgress(0.22 + p * 0.55),
+        tipMarker,
+        12500,
+        (p) => setProgress(0.2 + p * 0.58),
+        (cp) => revealCheckpoint(cp),
         () => cancelledRef.current,
       );
       if (cancelledRef.current) return;
 
       // 3) Settle on Dindigul
       setScene('dindigul');
-      endMarker.togglePopup();
+      if (lastCpIndex < CHECKPOINTS.length - 1) {
+        revealCheckpoint(CHECKPOINTS[CHECKPOINTS.length - 1]);
+      }
       await flyTo(map, {
         center: DINDIGUL,
         zoom: 11.2,
         pitch: 48,
-        bearing: 18,
-        duration: 2800,
-        curve: 1.2,
+        bearing: map.getBearing(),
+        duration: 2000,
+        curve: 1.1,
         easing: easeInOut,
       });
       if (cancelledRef.current) return;
       setProgress(0.9);
-      await wait(1400);
+      await wait(900);
       if (cancelledRef.current) return;
 
       // 4) Blessing beat, then invitation letter
       setScene('letter');
       setProgress(1);
       setShowBlessing(true);
+      setActiveStop(null);
       map.easeTo({
         center: DINDIGUL,
         zoom: 12.5,
         pitch: 55,
-        bearing: 8,
-        duration: 1800,
+        bearing: map.getBearing(),
+        duration: 1400,
         easing: easeInOut,
       });
-      await wait(3800);
+      await wait(2800);
       if (cancelledRef.current) return;
       finish();
     };
@@ -458,6 +628,9 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
   }, []);
 
   const copy = SCENE_COPY[scene];
+  const roadLine = activeStop
+    ? `${activeStop.name} · ${activeStop.region}`
+    : copy.line;
 
   return (
     <motion.div
@@ -621,12 +794,12 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
               />
             </div>
             <motion.p
-              key={scene + '-line'}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              key={(activeStop?.name ?? scene) + '-line'}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
               className="mt-3 text-center font-['Cormorant_Garamond'] italic text-[14px] sm:text-[16px] text-[var(--color-beige-paper)]"
             >
-              {copy.line}
+              {roadLine}
             </motion.p>
           </div>
           <div className="flex justify-center mt-4 pointer-events-auto">

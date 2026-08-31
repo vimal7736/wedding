@@ -140,7 +140,7 @@ export const InvitationCard = () => {
               transition={{ delay: 0.3 }}
               className="mt-4 font-['Cormorant_Garamond'] italic text-[16px] md:text-[19px] tracking-[0.5px] text-[var(--color-ink)] opacity-80"
             >
-              Invited by their parents Suresh & Jessy and Balu & Tamil Selvi
+              Invited by their parents
             </motion.div>
 
             <motion.div
