@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { playBackgroundMusic } from '../lib/backgroundMusic';
 
 type MapJourneyProps = {
   onComplete: () => void;
@@ -237,6 +238,12 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
   const [scene, setScene] = useState<Scene>('overview');
   const [mapReady, setMapReady] = useState(false);
   const [showBlessing, setShowBlessing] = useState(false);
+  const [started, setStarted] = useState(false);
+  const storyStartedRef = useRef(false);
+  const mapLoadedRef = useRef(false);
+  const runStoryRef = useRef<(() => Promise<void>) | null>(null);
+  const startedRef = useRef(false);
+  startedRef.current = started;
 
   const finish = useCallback(() => {
     if (doneRef.current) return;
@@ -341,7 +348,6 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         )
         .addTo(map);
 
-      setMapReady(true);
       setScene('overview');
       setProgress(0.05);
       await wait(900);
@@ -412,8 +418,18 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       finish();
     };
 
-    map.on('load', () => {
+    runStoryRef.current = runStory;
+
+    const tryStartStory = () => {
+      if (storyStartedRef.current || !startedRef.current || !mapLoadedRef.current) return;
+      storyStartedRef.current = true;
       void runStory();
+    };
+
+    map.on('load', () => {
+      mapLoadedRef.current = true;
+      setMapReady(true);
+      tryStartStory();
     });
 
     map.on('error', (e) => {
@@ -429,6 +445,17 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       mapRef.current = null;
     };
   }, [finish]);
+
+  useEffect(() => {
+    if (!started || !mapLoadedRef.current || storyStartedRef.current) return;
+    storyStartedRef.current = true;
+    void runStoryRef.current?.();
+  }, [started]);
+
+  const handleBegin = useCallback(() => {
+    void playBackgroundMusic();
+    setStarted(true);
+  }, []);
 
   const copy = SCENE_COPY[scene];
 
@@ -486,6 +513,39 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
           </p>
         </div>
       )}
+
+      <AnimatePresence>
+        {mapReady && !started && (
+          <motion.button
+            type="button"
+            onClick={handleBegin}
+            className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-5 px-8 cursor-pointer border-0"
+            style={{ background: 'rgba(20,26,16,0.72)', backdropFilter: 'blur(6px)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.6 } }}
+            aria-label="Begin the journey and start music"
+          >
+            <p className="font-['Cinzel'] text-[10px] sm:text-[11px] tracking-[0.45em] text-[var(--color-beige-warm)] uppercase">
+              The journey begins
+            </p>
+            <h2 className="font-['Cormorant_Garamond'] italic text-[26px] sm:text-[34px] text-[var(--color-beige-paper)] font-light text-center">
+              Calicut → Dindigul
+            </h2>
+            <div className="w-12 h-px bg-[rgba(169,138,75,0.55)]" />
+            <p className="font-['Cormorant_Garamond'] italic text-[14px] sm:text-[16px] text-[var(--color-beige-warm)] opacity-90">
+              Tap anywhere to begin
+            </p>
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity }}
+              className="text-[var(--color-gold-line)] opacity-60 text-sm mt-1"
+            >
+              ▼
+            </motion.div>
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Blessing bridge — fills the gap before the envelope */}
       <AnimatePresence>
