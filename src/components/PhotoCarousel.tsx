@@ -1,30 +1,8 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTouchLayout } from '../lib/useTouchLayout';
-
-const images = [
-  '/watermark.jpeg',
-  '/rings.png',
-  '/Gemini_Generated_Image_qs0u42qs0u42qs0u.png',
-  '/Gemini_Generated_Image_qiy5z6qiy5z6qiy5.png',
-  '/Gemini_Generated_Image_qs0u42qs0u42qs0u.png',
-];
-
+const PHOTO = '/watermark.jpeg';
 const CLIP = 'url(#heartClip)';
 
+/** Single couple photo in a heart frame — no carousel. */
 export const PhotoCarousel = () => {
-  const touchLayout = useTouchLayout();
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    // Slower on phones — fewer paint cycles while scrolling
-    const ms = touchLayout ? 6000 : 4500;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, ms);
-    return () => clearInterval(timer);
-  }, [touchLayout]);
-
   return (
     <div className="flex flex-col items-center mb-4 w-full">
       <svg width="0" height="0" className="absolute overflow-hidden" aria-hidden>
@@ -37,35 +15,13 @@ export const PhotoCarousel = () => {
 
       <div className="relative flex items-center justify-center w-[min(78vw,280px)] aspect-square">
         <div className="relative z-10 w-[84%] h-[84%]">
-          {touchLayout ? (
-            // Single image + CSS fade — stacking clipped layers janks phones
-            <img
-              key={currentIndex}
-              src={images[currentIndex]}
-              alt="Couple"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover object-top block"
-              style={{
-                clipPath: CLIP,
-                animation: 'invite-photo-in 0.45s ease both',
-              }}
-            />
-          ) : (
-            <AnimatePresence initial={false}>
-              <motion.img
-                key={currentIndex}
-                src={images[currentIndex]}
-                alt="Couple"
-                className="absolute inset-0 w-full h-full object-cover object-top block"
-                style={{ clipPath: CLIP }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </AnimatePresence>
-          )}
-
+          <img
+            src={PHOTO}
+            alt="Vimal & Aishwariya"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-cover object-top block"
+            style={{ clipPath: CLIP }}
+          />
           <div
             className="absolute inset-0 pointer-events-none z-[6]"
             style={{
@@ -74,22 +30,6 @@ export const PhotoCarousel = () => {
             }}
           />
         </div>
-      </div>
-
-      <div className="flex justify-center gap-1.5 mt-3">
-        {images.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Photo ${i + 1}`}
-            onClick={() => setCurrentIndex(i)}
-            className="h-1.5 rounded-full border-0 cursor-pointer transition-[width,background] duration-300"
-            style={{
-              width: i === currentIndex ? 18 : 6,
-              background: i === currentIndex ? '#d98f3c' : 'rgba(169,138,75,0.35)',
-            }}
-          />
-        ))}
       </div>
     </div>
   );
