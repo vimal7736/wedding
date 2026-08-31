@@ -9,19 +9,18 @@ const events = [
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {},
   visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.22, delayChildren: 0.08 },
+    transition: { staggerChildren: 0.18, delayChildren: 0.04 },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0.001, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 1.05, ease: EASE },
+    transition: { duration: 0.9, ease: EASE },
   },
 };
 
@@ -59,7 +58,7 @@ export const Itinerary = () => {
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.15, margin: '0px 0px -6% 0px' }}
+      viewport={{ once: true, amount: 0.05, margin: '0px 0px 22% 0px' }}
       className="w-full max-w-lg mx-auto mt-10 sm:mt-16 mb-8 sm:mb-12 relative px-1"
     >
       <motion.div

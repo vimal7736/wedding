@@ -31,7 +31,8 @@ export const PhotoCarousel = () => {
 
       <div className="relative flex items-center justify-center w-[min(78vw,280px)] aspect-square">
         <div className="relative z-10 w-[84%] h-[84%]">
-          <AnimatePresence mode="wait" initial={false}>
+          {/* Crossfade (no mode="wait") — wait blanks the frame between slides = eye blink */}
+          <AnimatePresence initial={false}>
             <motion.img
               key={currentIndex}
               src={images[currentIndex]}
@@ -41,7 +42,7 @@ export const PhotoCarousel = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
+              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
             />
           </AnimatePresence>
 

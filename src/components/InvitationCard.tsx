@@ -15,12 +15,12 @@ export const InvitationCard = () => {
     <div className="relative w-full max-w-6xl mx-auto z-10 px-1 pt-4 sm:p-4 sm:pt-8 md:p-12 mt-2 sm:mt-4">
       <motion.div
         className="glass-card rounded-xl overflow-visible"
-        initial={reduceMotion ? false : { opacity: 0, y: 40 }}
+        initial={reduceMotion ? false : { opacity: 0.001, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={
           reduceMotion
             ? { duration: 0.2 }
-            : { duration: 1.15, ease: EASE, delay: 0.12 }
+            : { duration: 0.9, ease: EASE, delay: 0.08 }
         }
       >
         <div
@@ -33,7 +33,7 @@ export const InvitationCard = () => {
           />
 
           <div className="relative px-3 py-6 sm:px-6 sm:py-8 md:px-10 md:py-12 flex flex-col items-center text-center w-full min-w-0">
-            <Reveal delay={0.2} y={24} duration={1.2} className="w-full text-center mb-6 sm:mb-8">
+            <Reveal delay={0.2} y={14} duration={0.95} className="w-full text-center mb-6 sm:mb-8">
               <p className="font-['Cormorant_Garamond'] italic text-[20px] sm:text-[24px] md:text-[32px] text-[var(--color-olive-deep)] leading-snug px-1">
                 Celebrate the start of our forever
               </p>
@@ -49,7 +49,7 @@ export const InvitationCard = () => {
               </p>
             </Reveal>
 
-            <Reveal delay={0.35} y={20} duration={1.25} className="w-full flex justify-center">
+            <Reveal delay={0.35} y={12} duration={0.95} className="w-full flex justify-center">
               <Hills className="w-full max-w-[400px] h-auto mx-auto mb-4 opacity-90" />
             </Reveal>
 
@@ -67,7 +67,7 @@ export const InvitationCard = () => {
               Invited by their parents
             </Reveal>
 
-            <Reveal delay={0.1} y={36} duration={1.2} className="mt-8 flex flex-col gap-6 md:gap-8 items-center w-full">
+            <Reveal delay={0.1} y={16} duration={0.95} className="mt-8 flex flex-col gap-6 md:gap-8 items-center w-full">
               <div className="flex flex-col items-center">
                 <span className="font-['Cormorant_Garamond'] text-xl sm:text-2xl md:text-4xl text-[var(--color-olive-deep)] font-semibold tracking-wide">
                   Vimal Suresh
@@ -89,15 +89,15 @@ export const InvitationCard = () => {
               </div>
             </Reveal>
 
-            <Reveal delay={0.05} y={20} className="w-[180px] my-10">
+            <Reveal delay={0.05} y={12} className="w-[180px] my-10">
               <KolamDivider className="w-full" />
             </Reveal>
 
-            <Reveal y={40} duration={1.25} className="w-full">
+            <Reveal y={16} duration={0.95} className="w-full">
               <PhotoCarousel />
             </Reveal>
 
-            <Reveal y={36} duration={1.2}>
+            <Reveal y={16} duration={0.95}>
               <h1 className="font-['Cormorant_Garamond'] font-semibold text-[clamp(22px,7vw,64px)] leading-[1.25] text-[var(--color-olive-deep)] mt-4 sm:mt-6 px-1">
                 Vimal{' '}
                 <span className="font-['Cormorant_Garamond'] italic font-normal text-[0.5em] text-[var(--color-ink)] px-[6px] md:px-[15px] align-middle">
@@ -115,14 +115,14 @@ export const InvitationCard = () => {
             </Reveal>
 
             <motion.div
-              initial={reduceMotion ? false : { opacity: 0, scaleX: 0 }}
+              initial={reduceMotion ? false : { opacity: 0.001, scaleX: 0.2 }}
               whileInView={reduceMotion ? undefined : { opacity: 1, scaleX: 1 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 1.25, ease: EASE }}
+              viewport={{ once: true, amount: 0.2, margin: '0px 0px 22% 0px' }}
+              transition={{ duration: 0.9, ease: EASE }}
               className="h-[1px] w-[100px] bg-[var(--color-gold-line)] my-10 mx-auto origin-center"
             />
 
-            <Reveal y={36} duration={1.2} className="w-full max-w-xl mx-auto mb-6 sm:mb-10 px-0 sm:px-2">
+            <Reveal y={16} duration={0.95} className="w-full max-w-xl mx-auto mb-6 sm:mb-10 px-0 sm:px-2">
               <p className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] sm:tracking-[4px] text-[var(--color-gold-line)] uppercase font-semibold mb-3 sm:mb-4">
                 Wedding Ceremony
               </p>
@@ -157,14 +157,14 @@ export const InvitationCard = () => {
             </Reveal>
 
             <Reveal
-              y={28}
+              y={14}
               className="font-['Cormorant_Garamond'] text-[18px] md:text-[22px] leading-[1.8] text-[var(--color-ink)] max-w-[600px] mx-auto font-light"
             >
               Join us for an evening of joy, laughter and celebration as we welcome you to our
               wedding reception — a warm gathering to celebrate our new beginning together.
             </Reveal>
 
-            <Reveal y={36} duration={1.15} className="w-full">
+            <Reveal y={16} duration={0.9} className="w-full">
               <CountdownTimer />
             </Reveal>
 
@@ -177,8 +177,8 @@ export const InvitationCard = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 items-stretch relative">
                 <Reveal
                   delay={0}
-                  y={40}
-                  duration={1.15}
+                  y={16}
+                  duration={0.9}
                   className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
                 >
                   <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
@@ -211,8 +211,8 @@ export const InvitationCard = () => {
 
                 <Reveal
                   delay={0.12}
-                  y={40}
-                  duration={1.15}
+                  y={16}
+                  duration={0.9}
                   className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
                 >
                   <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
@@ -231,8 +231,8 @@ export const InvitationCard = () => {
 
                 <Reveal
                   delay={0.24}
-                  y={40}
-                  duration={1.15}
+                  y={16}
+                  duration={0.9}
                   className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
                 >
                   <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
@@ -255,7 +255,7 @@ export const InvitationCard = () => {
               </div>
             </div>
 
-            <Reveal delay={0.05} y={24} className="w-[120px] mt-16 mx-auto">
+            <Reveal delay={0.05} y={14} className="w-[120px] mt-16 mx-auto">
               <FooterLeaf className="w-full" />
             </Reveal>
           </div>

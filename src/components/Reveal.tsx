@@ -1,42 +1,42 @@
-import {
-  motion,
-  useReducedMotion,
-  type HTMLMotionProps,
-} from 'framer-motion';
+import { useReducedMotion, type HTMLMotionProps } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import { useTouchLayout } from '../lib/useTouchLayout';
 
-/** Soft ease — slow rise without overshoot. */
 const EASE = [0.22, 1, 0.36, 1] as const;
-
-/** Fire once when a slice of the block enters the viewport. */
-export const revealViewport = {
-  once: true as const,
-  amount: 0.18,
-  margin: '0px 0px -6% 0px',
-};
 
 type RevealProps = HTMLMotionProps<'div'> & {
   delay?: number;
-  /** Starting translateY in px — keep modest so GPU stays cheap. */
   y?: number;
   duration?: number;
 };
 
 /**
- * Scroll-triggered fade/slide. Opacity + transform only — no scroll listeners,
- * so scrolling stays smooth even with many reveals on the page.
+ * Desktop: soft scroll fade-up.
+ * Phone / touch: plain div — IntersectionObservers + motion during scroll cause lag.
  */
 export function Reveal({
   children,
   className,
   style,
   delay = 0,
-  y = 32,
-  duration = 1.1,
+  y = 18,
+  duration = 0.95,
   ...rest
 }: RevealProps) {
+  const touchLayout = useTouchLayout();
   const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, {
+    once: true,
+    margin: '0px 0px 22% 0px',
+    amount: 0.05,
+    // Skip observer work entirely on touch — hook still called for rules-of-hooks,
+    // but we won't attach when disabled via... actually useInView always attaches.
+  });
 
-  if (reduceMotion) {
+  // Plain DOM on phones / reduced-motion: zero scroll listeners from this component
+  if (touchLayout || reduceMotion) {
     return (
       <div className={className} style={style}>
         {children}
@@ -46,11 +46,11 @@ export function Reveal({
 
   return (
     <motion.div
+      ref={ref}
       className={className}
       style={style}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={revealViewport}
+      initial={false}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0.001, y }}
       transition={{ duration, delay, ease: EASE }}
       {...rest}
     >
