@@ -277,6 +277,21 @@ function animateDottedRoute(
     let lastNow = start;
     let lastProgressAt = 0;
     let nextCp = 0;
+    let dashStep = 0;
+    let lastDashAt = 0;
+
+    // Marching-ants sequence — dots appear to chase the tip
+    const dashSeq: number[][] = [
+      [0, 1.6, 1.1],
+      [0.35, 1.6, 0.75],
+      [0.7, 1.6, 0.4],
+      [1.05, 1.6, 0.05],
+      [0, 0.05, 1.1, 1.55],
+      [0, 0.4, 1.1, 1.2],
+      [0, 0.75, 1.1, 0.85],
+      [0, 1.1, 1.1, 0.5],
+      [0, 1.45, 1.1, 0.15],
+    ];
 
     const tick = (now: number) => {
       if (cancelled()) {
@@ -322,8 +337,17 @@ function animateDottedRoute(
 
       tipMarker.setLngLat(tip);
 
+      // Marching dots along the growing trail (same on phone + desktop)
+      if (now - lastDashAt > (mobile ? 55 : 70)) {
+        lastDashAt = now;
+        dashStep = (dashStep + 1) % dashSeq.length;
+        if (map.getLayer('route-progress-dots')) {
+          map.setPaintProperty('route-progress-dots', 'line-dasharray', dashSeq[dashStep]);
+        }
+      }
+
       // Soft breathing glow on the trail
-      const breath = (mobile ? 0.36 : 0.28) + Math.sin(now / 520) * 0.08;
+      const breath = (mobile ? 0.4 : 0.28) + Math.sin(now / 520) * 0.08;
       if (map.getLayer('route-progress-glow')) {
         map.setPaintProperty('route-progress-glow', 'line-opacity', breath);
       }
@@ -437,10 +461,11 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       forceResize();
 
       const mobile = isMobileMap();
-      // Match desktop trail weight so the dotted path reads the same on phones
-      const ghostW = mobile ? 2.8 : 2.5;
-      const glowW = mobile ? 14 : 12;
-      const dotsW = mobile ? 4 : 3.5;
+      // Clear dotted trail on phones — round caps + thicker dashes read as chasing dots
+      const ghostW = mobile ? 2.6 : 2.5;
+      const glowW = mobile ? 16 : 12;
+      const coreW = mobile ? 2.2 : 1.6;
+      const dotsW = mobile ? 5.5 : 3.5;
 
       map.addSource('route', {
         type: 'geojson',
@@ -460,7 +485,7 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         paint: {
           'line-color': '#c8a96e',
           'line-width': ghostW,
-          'line-opacity': mobile ? 0.4 : 0.28,
+          'line-opacity': mobile ? 0.35 : 0.28,
           'line-dasharray': [0.8, 1.6],
         },
       });
@@ -482,22 +507,35 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         paint: {
           'line-color': '#c8a96e',
           'line-width': glowW,
-          'line-opacity': mobile ? 0.45 : 0.32,
-          'line-blur': mobile ? 2 : 4,
+          'line-opacity': mobile ? 0.42 : 0.32,
+          'line-blur': mobile ? 2.5 : 4,
         },
       });
 
-      // Animated dotted path toward Dindigul
+      // Solid core so the travelled path stays readable under the dots
+      map.addLayer({
+        id: 'route-progress-core',
+        type: 'line',
+        source: 'route-progress',
+        layout: { 'line-join': 'round', 'line-cap': 'round' },
+        paint: {
+          'line-color': '#e8d5a0',
+          'line-width': coreW,
+          'line-opacity': mobile ? 0.85 : 0.7,
+        },
+      });
+
+      // Animated dotted path toward Dindigul (dasharray marches in animateDottedRoute)
       map.addLayer({
         id: 'route-progress-dots',
         type: 'line',
         source: 'route-progress',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': '#a98a4b',
+          'line-color': mobile ? '#f2ead9' : '#a98a4b',
           'line-width': dotsW,
-          'line-opacity': 0.95,
-          'line-dasharray': mobile ? [0.8, 1.4] : [0.5, 1.6],
+          'line-opacity': 0.98,
+          'line-dasharray': mobile ? [0, 1.6, 1.1] : [0.5, 1.6],
         },
       });
 
