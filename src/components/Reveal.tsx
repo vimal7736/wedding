@@ -1,5 +1,9 @@
-import { useReducedMotion, type HTMLMotionProps } from 'framer-motion';
-import { motion, useInView } from 'framer-motion';
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  type HTMLMotionProps,
+} from 'framer-motion';
 import { useRef } from 'react';
 import { useTouchLayout } from '../lib/useTouchLayout';
 
@@ -12,8 +16,8 @@ type RevealProps = HTMLMotionProps<'div'> & {
 };
 
 /**
- * Desktop: soft scroll fade-up.
- * Phone / touch: plain div — IntersectionObservers + motion during scroll cause lag.
+ * Phone/touch: plain div (no observers — scroll stays native).
+ * Desktop: soft one-shot fade-up when entering view.
  */
 export function Reveal({
   children,
@@ -26,16 +30,7 @@ export function Reveal({
 }: RevealProps) {
   const touchLayout = useTouchLayout();
   const reduceMotion = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, {
-    once: true,
-    margin: '0px 0px 22% 0px',
-    amount: 0.05,
-    // Skip observer work entirely on touch — hook still called for rules-of-hooks,
-    // but we won't attach when disabled via... actually useInView always attaches.
-  });
 
-  // Plain DOM on phones / reduced-motion: zero scroll listeners from this component
   if (touchLayout || reduceMotion) {
     return (
       <div className={className} style={style}>
@@ -43,6 +38,36 @@ export function Reveal({
       </div>
     );
   }
+
+  return (
+    <RevealMotion
+      className={className}
+      style={style}
+      delay={delay}
+      y={y}
+      duration={duration}
+      {...rest}
+    >
+      {children}
+    </RevealMotion>
+  );
+}
+
+function RevealMotion({
+  children,
+  className,
+  style,
+  delay = 0,
+  y = 18,
+  duration = 0.95,
+  ...rest
+}: RevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, {
+    once: true,
+    margin: '0px 0px 22% 0px',
+    amount: 0.05,
+  });
 
   return (
     <motion.div

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { InvitationCard } from './components/InvitationCard';
 import { AudioPlayer } from './components/AudioPlayer';
@@ -22,6 +22,27 @@ function getInitialStage(): Stage {
   }
 }
 
+function InviteShell({ children, lite }: { children: ReactNode; lite: boolean }) {
+  if (lite) {
+    return (
+      <main className="relative min-h-screen w-full flex flex-col items-center justify-start py-6 sm:py-12 px-3 sm:px-4 overflow-x-hidden bg-[var(--color-olive-deep)]">
+        {children}
+      </main>
+    );
+  }
+
+  return (
+    <motion.main
+      className="relative min-h-screen w-full flex flex-col items-center justify-start py-6 sm:py-12 px-3 sm:px-4 overflow-x-hidden bg-[var(--color-olive-deep)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.main>
+  );
+}
+
 function App() {
   const reduceMotion = useReducedMotion();
   const touchLayout = useTouchLayout();
@@ -41,12 +62,11 @@ function App() {
   }, []);
 
   const opened = stage === 'invite';
-  // Continuous fixed-layer animations fight scroll on phones
-  const showAmbientMotion = opened && !touchLayout && !reduceMotion;
+  const lite = Boolean(touchLayout || reduceMotion);
+  const showAmbientMotion = opened && !lite;
 
   return (
     <>
-      {/* Music from the very first screen (map → seal → invite) */}
       <AudioPlayer />
 
       <AnimatePresence mode="wait">
@@ -59,16 +79,7 @@ function App() {
       </AnimatePresence>
 
       {opened && (
-        <motion.main
-          className="relative min-h-screen w-full flex flex-col items-center justify-start py-6 sm:py-12 px-3 sm:px-4 overflow-x-hidden bg-[var(--color-olive-deep)]"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={
-            reduceMotion || touchLayout
-              ? { duration: 0.25 }
-              : { duration: 0.7, ease: [0.22, 1, 0.36, 1] }
-          }
-        >
+        <InviteShell lite={lite}>
           {showAmbientMotion && (
             <>
               <OrbitingImages />
@@ -110,7 +121,7 @@ function App() {
               Vimal &nbsp;✦&nbsp; Aishwariya &nbsp;·&nbsp; 25 October 2026
             </p>
           </Reveal>
-        </motion.main>
+        </InviteShell>
       )}
     </>
   );

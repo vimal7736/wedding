@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTouchLayout } from '../lib/useTouchLayout';
 
 const images = [
   '/watermark.jpeg',
@@ -9,15 +10,20 @@ const images = [
   '/Gemini_Generated_Image_qs0u42qs0u42qs0u.png',
 ];
 
+const CLIP = 'url(#heartClip)';
+
 export const PhotoCarousel = () => {
+  const touchLayout = useTouchLayout();
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    // Slower on phones — fewer paint cycles while scrolling
+    const ms = touchLayout ? 6000 : 4500;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 4500);
+    }, ms);
     return () => clearInterval(timer);
-  }, []);
+  }, [touchLayout]);
 
   return (
     <div className="flex flex-col items-center mb-4 w-full">
@@ -31,25 +37,39 @@ export const PhotoCarousel = () => {
 
       <div className="relative flex items-center justify-center w-[min(78vw,280px)] aspect-square">
         <div className="relative z-10 w-[84%] h-[84%]">
-          {/* Crossfade (no mode="wait") — wait blanks the frame between slides = eye blink */}
-          <AnimatePresence initial={false}>
-            <motion.img
+          {touchLayout ? (
+            // Single image + CSS fade — stacking clipped layers janks phones
+            <img
               key={currentIndex}
               src={images[currentIndex]}
               alt="Couple"
+              decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-top block"
-              style={{ clipPath: 'url(#heartClip)' }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                clipPath: CLIP,
+                animation: 'invite-photo-in 0.45s ease both',
+              }}
             />
-          </AnimatePresence>
+          ) : (
+            <AnimatePresence initial={false}>
+              <motion.img
+                key={currentIndex}
+                src={images[currentIndex]}
+                alt="Couple"
+                className="absolute inset-0 w-full h-full object-cover object-top block"
+                style={{ clipPath: CLIP }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </AnimatePresence>
+          )}
 
           <div
             className="absolute inset-0 pointer-events-none z-[6]"
             style={{
-              clipPath: 'url(#heartClip)',
+              clipPath: CLIP,
               background: 'linear-gradient(135deg, rgba(0,0,0,0.15) 0%, transparent 45%)',
             }}
           />

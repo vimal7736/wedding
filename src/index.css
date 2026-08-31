@@ -155,6 +155,20 @@
     animation: none !important;
     will-change: auto;
   }
+
+  /* Keep invite scroll on the compositor — avoid paint thrash */
+  .glass-card {
+    transform: translateZ(0);
+  }
+}
+
+@keyframes invite-photo-in {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* MapLibre must fill the journey screen */

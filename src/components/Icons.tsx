@@ -1,32 +1,73 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTouchLayout } from '../lib/useTouchLayout';
 
-export const Hills = (props: React.SVGProps<SVGSVGElement>) => (
-  <motion.svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {...(props as any)}>
-    <motion.path 
-      d="M0,70 Q40,35 80,58 T160,50 T240,62 T320,42 T400,58" 
-      fill="none" stroke="var(--color-olive-mid)" strokeWidth="1.4" opacity="0.55"
-      initial={{ pathLength: 0 }}
-      whileInView={{ pathLength: 1 }}
-      transition={{ duration: 1.5, ease: "easeInOut" }}
-      viewport={{ once: true }}
-    />
-    <motion.path 
-      d="M0,80 Q50,50 100,70 T200,64 T300,74 T400,68" 
-      fill="none" stroke="var(--color-gold-line)" strokeWidth="1" opacity="0.5"
-      initial={{ pathLength: 0 }}
-      whileInView={{ pathLength: 1 }}
-      transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
-      viewport={{ once: true }}
-    />
-    <motion.circle cx="330" cy="26" r="12" fill="var(--color-gold-line)" opacity="0.45"
-      initial={{ scale: 0, opacity: 0 }}
-      whileInView={{ scale: 1, opacity: 0.45 }}
-      transition={{ duration: 0.8, delay: 0.8 }}
-      viewport={{ once: true }}
-    />
-  </motion.svg>
-);
+function HillsStatic(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {...props}>
+      <path
+        d="M0,70 Q40,35 80,58 T160,50 T240,62 T320,42 T400,58"
+        fill="none"
+        stroke="var(--color-olive-mid)"
+        strokeWidth="1.4"
+        opacity="0.55"
+      />
+      <path
+        d="M0,80 Q50,50 100,70 T200,64 T300,74 T400,68"
+        fill="none"
+        stroke="var(--color-gold-line)"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      <circle cx="330" cy="26" r="12" fill="var(--color-gold-line)" opacity="0.45" />
+    </svg>
+  );
+}
+
+export const Hills = (props: React.SVGProps<SVGSVGElement>) => {
+  const touchLayout = useTouchLayout();
+  if (touchLayout) {
+    return <HillsStatic {...props} />;
+  }
+
+  return (
+    <motion.svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {...(props as any)}>
+      <motion.path
+        d="M0,70 Q40,35 80,58 T160,50 T240,62 T320,42 T400,58"
+        fill="none"
+        stroke="var(--color-olive-mid)"
+        strokeWidth="1.4"
+        opacity="0.55"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        transition={{ duration: 1.5, ease: 'easeInOut' }}
+        viewport={{ once: true }}
+      />
+      <motion.path
+        d="M0,80 Q50,50 100,70 T200,64 T300,74 T400,68"
+        fill="none"
+        stroke="var(--color-gold-line)"
+        strokeWidth="1"
+        opacity="0.5"
+        initial={{ pathLength: 0 }}
+        whileInView={{ pathLength: 1 }}
+        transition={{ duration: 1.5, ease: 'easeInOut', delay: 0.2 }}
+        viewport={{ once: true }}
+      />
+      <motion.circle
+        cx="330"
+        cy="26"
+        r="12"
+        fill="var(--color-gold-line)"
+        opacity="0.45"
+        initial={{ scale: 0, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 0.45 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        viewport={{ once: true }}
+      />
+    </motion.svg>
+  );
+};
 
 export const KolamDivider = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 140 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" {...props}>

@@ -77,8 +77,19 @@ export const CountdownTimer = () => {
       setReceptionLeft(calcTimeLeft(RECEPTION_DATE));
     };
     tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
+    // 1s updates while scrolling cost frames on phones — 1s when visible, else pause
+    let interval = window.setInterval(tick, 1000);
+    const onVis = () => {
+      window.clearInterval(interval);
+      if (document.hidden) return;
+      tick();
+      interval = window.setInterval(tick, 1000);
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVis);
+    };
   }, []);
 
   return (
