@@ -197,6 +197,57 @@ function lerpAngle(a: number, b: number, t: number) {
   return (a + diff * t + 360) % 360;
 }
 
+/** Sample bead dots evenly along the drawn trail (visible on phones, unlike dasharray alone). */
+function sampleTrailBeads(
+  coords: [number, number][],
+  t: number,
+  spacing: number,
+): { type: 'Feature'; properties: Record<string, unknown>; geometry: { type: 'Point'; coordinates: [number, number] } }[] {
+  const total = routeLength(coords) * Math.min(1, Math.max(0, t));
+  if (total <= 0) return [];
+
+  const features: {
+    type: 'Feature';
+    properties: Record<string, unknown>;
+    geometry: { type: 'Point'; coordinates: [number, number] };
+  }[] = [];
+  let walked = 0;
+  let nextAt = 0;
+
+  for (let i = 1; i < coords.length; i++) {
+    const a = coords[i - 1];
+    const b = coords[i];
+    const A = maplibregl.MercatorCoordinate.fromLngLat({ lng: a[0], lat: a[1] });
+    const B = maplibregl.MercatorCoordinate.fromLngLat({ lng: b[0], lat: b[1] });
+    const seg = Math.hypot(B.x - A.x, B.y - A.y);
+    if (seg <= 0) continue;
+
+    while (nextAt <= walked + seg && nextAt <= total) {
+      const u = (nextAt - walked) / seg;
+      const lng = a[0] + (b[0] - a[0]) * u;
+      const lat = a[1] + (b[1] - a[1]) * u;
+      features.push({
+        type: 'Feature',
+        properties: {},
+        geometry: { type: 'Point', coordinates: [lng, lat] },
+      });
+      nextAt += spacing;
+    }
+
+    walked += seg;
+    if (walked >= total) break;
+  }
+
+  const tip = pointAlongRoute(coords, t);
+  features.push({
+    type: 'Feature',
+    properties: { tip: true },
+    geometry: { type: 'Point', coordinates: tip },
+  });
+
+  return features;
+}
+
 /** Slice route from start through progress t (0–1), always including the tip point. */
 function routeSlice(coords: [number, number][], t: number): [number, number][] {
   const tip = pointAlongRoute(coords, t);
@@ -267,6 +318,7 @@ function animateDottedRoute(
 ): Promise<void> {
   return new Promise((resolve) => {
     const mobile = isMobileMap();
+    const beadSpacing = routeLength(ROUTE) / (mobile ? 26 : 34);
     const start = performance.now();
     let camLng = map.getCenter().lng;
     let camLat = map.getCenter().lat;
@@ -335,6 +387,13 @@ function animateDottedRoute(
         geometry: { type: 'LineString', coordinates: slice },
       });
 
+      // Real circle beads along the trail — readable on mobile WebGL (dasharray alone often vanishes)
+      const beadSrc = map.getSource('route-beads') as maplibregl.GeoJSONSource | undefined;
+      beadSrc?.setData({
+        type: 'FeatureCollection',
+        features: sampleTrailBeads(ROUTE, drawT, beadSpacing),
+      });
+
       tipMarker.setLngLat(tip);
 
       // Marching dots along the growing trail (same on phone + desktop)
@@ -392,6 +451,10 @@ function animateDottedRoute(
           type: 'Feature',
           properties: {},
           geometry: { type: 'LineString', coordinates: ROUTE },
+        });
+        beadSrc?.setData({
+          type: 'FeatureCollection',
+          features: sampleTrailBeads(ROUTE, 1, beadSpacing),
         });
         resolve();
       }
@@ -461,11 +524,8 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       forceResize();
 
       const mobile = isMobileMap();
-      // Clear dotted trail on phones — round caps + thicker dashes read as chasing dots
       const ghostW = mobile ? 2.6 : 2.5;
-      const glowW = mobile ? 16 : 12;
-      const coreW = mobile ? 2.2 : 1.6;
-      const dotsW = mobile ? 5.5 : 3.5;
+      const glowW = mobile ? 18 : 12;
 
       map.addSource('route', {
         type: 'geojson',
@@ -512,30 +572,59 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         },
       });
 
-      // Solid core so the travelled path stays readable under the dots
+      // Solid gold core — thick so the travelled path is obvious on phones
       map.addLayer({
         id: 'route-progress-core',
         type: 'line',
         source: 'route-progress',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': '#e8d5a0',
-          'line-width': coreW,
-          'line-opacity': mobile ? 0.85 : 0.7,
+          'line-color': '#c8a96e',
+          'line-width': mobile ? 5 : 2.2,
+          'line-opacity': mobile ? 0.95 : 0.75,
         },
       });
 
-      // Animated dotted path toward Dindigul (dasharray marches in animateDottedRoute)
+      // Soft dashed overlay
       map.addLayer({
         id: 'route-progress-dots',
         type: 'line',
         source: 'route-progress',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: {
-          'line-color': mobile ? '#f2ead9' : '#a98a4b',
-          'line-width': dotsW,
-          'line-opacity': 0.98,
-          'line-dasharray': mobile ? [0, 1.6, 1.1] : [0.5, 1.6],
+          'line-color': '#f2ead9',
+          'line-width': mobile ? 3 : 3.5,
+          'line-opacity': 0.9,
+          'line-dasharray': [0.4, 1.4],
+        },
+      });
+
+      // Bead dots that grow behind the tip (what you see clearly on mobile)
+      map.addSource('route-beads', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+      });
+      map.addLayer({
+        id: 'route-beads-glow',
+        type: 'circle',
+        source: 'route-beads',
+        paint: {
+          'circle-radius': mobile ? 7 : 5,
+          'circle-color': '#a98a4b',
+          'circle-opacity': 0.35,
+          'circle-blur': 0.4,
+        },
+      });
+      map.addLayer({
+        id: 'route-beads',
+        type: 'circle',
+        source: 'route-beads',
+        paint: {
+          'circle-radius': mobile ? 4.5 : 3.5,
+          'circle-color': '#f2ead9',
+          'circle-stroke-width': mobile ? 2 : 1.5,
+          'circle-stroke-color': '#a98a4b',
+          'circle-opacity': 1,
         },
       });
 

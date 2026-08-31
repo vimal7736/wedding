@@ -187,6 +187,7 @@
   align-items: center;
   pointer-events: none;
   opacity: 0;
+  visibility: hidden;
   transform: translateY(10px) scale(0.92);
   transition:
     opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
@@ -196,26 +197,26 @@
 
 .journey-cp.is-visible {
   opacity: 1;
+  visibility: visible;
   transform: translateY(0) scale(1);
 }
 
 .journey-cp.is-passed {
-  opacity: 0.55;
-  transform: translateY(0) scale(0.9);
+  opacity: 1;
+  visibility: visible;
+  transform: none;
 }
 
-.journey-cp.is-passed .journey-cp-card {
-  padding: 6px 10px;
-  gap: 6px;
-}
-
-.journey-cp.is-passed .journey-cp-step,
-.journey-cp.is-passed .journey-cp-region {
+/* Passed stops = pin only (no stacked name cards covering the trail) */
+.journey-cp.is-passed .journey-cp-card,
+.journey-cp.is-passed .journey-cp-stem {
   display: none;
 }
 
-.journey-cp.is-passed .journey-cp-name {
-  font-size: 12px;
+.journey-cp.is-passed .journey-cp-dot {
+  width: 8px;
+  height: 8px;
+  opacity: 0.95;
 }
 
 .journey-cp-card {
@@ -351,11 +352,6 @@
   .journey-cp.is-passed {
     opacity: 1;
     transform: none;
-  }
-
-  .journey-cp.is-passed .journey-cp-card,
-  .journey-cp.is-passed .journey-cp-stem {
-    display: none;
   }
 
   .journey-cp.is-passed .journey-cp-dot {
