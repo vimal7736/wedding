@@ -328,3 +328,52 @@
     opacity: 0.15;
   }
 }
+
+/* Mobile: one active label only — passed stops keep a tiny map pin, not stacked name cards */
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  .journey-cp-card {
+    padding: 7px 12px 7px 8px;
+    gap: 8px;
+    border-radius: 12px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(18, 22, 12, 0.92);
+  }
+
+  .journey-cp-name {
+    font-size: 14px;
+  }
+
+  .journey-cp-stem {
+    height: 8px;
+  }
+
+  .journey-cp.is-passed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .journey-cp.is-passed .journey-cp-card,
+  .journey-cp.is-passed .journey-cp-stem {
+    display: none;
+  }
+
+  .journey-cp.is-passed .journey-cp-dot {
+    width: 8px;
+    height: 8px;
+    opacity: 0.9;
+    box-shadow: 0 0 0 2px rgba(169, 138, 75, 0.35), 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+
+  .journey-tip {
+    width: 22px;
+    height: 22px;
+  }
+
+  .journey-tip-core {
+    inset: 6px;
+    box-shadow:
+      0 0 14px 4px rgba(200, 169, 110, 0.85),
+      0 0 2px 1px rgba(242, 234, 217, 0.95);
+  }
+}

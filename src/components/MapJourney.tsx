@@ -323,26 +323,24 @@ function animateDottedRoute(
       tipMarker.setLngLat(tip);
 
       // Soft breathing glow on the trail
-      const breath = (mobile ? 0.4 : 0.28) + Math.sin(now / 520) * 0.08;
+      const breath = (mobile ? 0.36 : 0.28) + Math.sin(now / 520) * 0.08;
       if (map.getLayer('route-progress-glow')) {
         map.setPaintProperty('route-progress-glow', 'line-opacity', breath);
       }
 
-      // Phones: stay zoomed out + flatter so the growing dotted trail stays on screen
+      // Same chase feel as desktop — follow the tip (not a far overview)
       const targetZoom = mobile
-        ? lerp(7.6, 6.4, Math.min(1, drawT * 1.15))
+        ? lerp(9.5, 8.35, Math.min(1, drawT * 1.15))
         : lerp(10.1, 8.7, Math.min(1, drawT * 1.15));
-      const targetPitch = mobile ? lerp(32, 24, drawT) : lerp(50, 45, drawT);
+      const targetPitch = mobile ? lerp(44, 38, drawT) : lerp(50, 45, drawT);
 
-      // Look slightly behind the tip so more of the drawn line is visible (esp. mobile)
-      const lookBack = pointAlongRoute(ROUTE, Math.max(0, drawT - (mobile ? 0.12 : 0.04)));
-      const focusLng = mobile ? lerp(lookBack[0], tip[0], 0.55) : tip[0];
-      const focusLat = mobile ? lerp(lookBack[1], tip[1], 0.55) : tip[1];
+      const lookBack = pointAlongRoute(ROUTE, Math.max(0, drawT - (mobile ? 0.05 : 0.04)));
+      const focusLng = mobile ? lerp(lookBack[0], tip[0], 0.82) : tip[0];
+      const focusLat = mobile ? lerp(lookBack[1], tip[1], 0.82) : tip[1];
 
-      // Softer chase — less snap, more glide
-      const follow = 1 - Math.pow(mobile ? 0.0004 : 0.00012, dt);
+      const follow = 1 - Math.pow(mobile ? 0.0002 : 0.00012, dt);
       const zoomFollow = 1 - Math.pow(0.0009, dt);
-      const brgFollow = 1 - Math.pow(mobile ? 0.004 : 0.0018, dt);
+      const brgFollow = 1 - Math.pow(mobile ? 0.0025 : 0.0018, dt);
 
       camLng = lerp(camLng, focusLng, follow);
       camLat = lerp(camLat, focusLat, follow);
@@ -439,10 +437,10 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       forceResize();
 
       const mobile = isMobileMap();
-      // Thicker dashes on small screens so the trail stays readable
-      const ghostW = mobile ? 3.5 : 2.5;
-      const glowW = mobile ? 18 : 12;
-      const dotsW = mobile ? 5.5 : 3.5;
+      // Match desktop trail weight so the dotted path reads the same on phones
+      const ghostW = mobile ? 2.8 : 2.5;
+      const glowW = mobile ? 14 : 12;
+      const dotsW = mobile ? 4 : 3.5;
 
       map.addSource('route', {
         type: 'geojson',
@@ -503,19 +501,20 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
         },
       });
 
-      const tipMarker = new maplibregl.Marker({
-        element: createTipEl(),
-        anchor: 'center',
-      })
-        .setLngLat(CALICUT)
-        .addTo(map);
-
       const checkpointMarkers = CHECKPOINTS.map((cp, i) => {
         const el = createCheckpointEl(cp, i);
         return new maplibregl.Marker({ element: el, anchor: 'bottom', offset: [0, -2] })
           .setLngLat(cp.coord)
           .addTo(map);
       });
+
+      // Tip last so it stays above checkpoint markers while travelling
+      const tipMarker = new maplibregl.Marker({
+        element: createTipEl(),
+        anchor: 'center',
+      })
+        .setLngLat(CALICUT)
+        .addTo(map);
 
       let lastCpIndex = -1;
       const revealCheckpoint = (cp: Checkpoint) => {
@@ -540,22 +539,24 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       await wait(500);
       if (cancelledRef.current) return;
 
-      // 1) Zoom into Calicut (less extreme on phones so the route corridor is visible)
+      // 1) Zoom into Calicut — same cinematic close-up on phones as desktop
       setScene('calicut');
       setProgress(0.12);
       await flyTo(map, {
         center: CALICUT,
-        zoom: mobile ? 8.0 : 10.4,
-        pitch: mobile ? 34 : 52,
-        bearing: mobile ? 20 : 35,
-        duration: mobile ? 2600 : 3200,
+        zoom: mobile ? 9.8 : 10.4,
+        pitch: mobile ? 46 : 52,
+        bearing: mobile ? 28 : 35,
+        duration: mobile ? 2800 : 3200,
         curve: 1.3,
         speed: 0.45,
         easing: easeInOut,
       });
       if (cancelledRef.current) return;
+      // Reveal start stop once we're at Calicut
+      revealCheckpoint(CHECKPOINTS[0]);
       setProgress(0.2);
-      await wait(mobile ? 500 : 800);
+      await wait(mobile ? 600 : 800);
       if (cancelledRef.current) return;
 
       // 2) Dotted line draws — tooltips pop only when the tip reaches each place
@@ -563,7 +564,7 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       await animateDottedRoute(
         map,
         tipMarker,
-        mobile ? 14000 : 12500,
+        mobile ? 13500 : 12500,
         (p) => setProgress(0.2 + p * 0.58),
         (cp) => revealCheckpoint(cp),
         () => cancelledRef.current,
@@ -577,8 +578,8 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       }
       await flyTo(map, {
         center: DINDIGUL,
-        zoom: mobile ? 9.2 : 11.2,
-        pitch: mobile ? 36 : 48,
+        zoom: mobile ? 10.4 : 11.2,
+        pitch: mobile ? 44 : 48,
         bearing: map.getBearing(),
         duration: 2000,
         curve: 1.1,
@@ -596,8 +597,8 @@ export const MapJourney = ({ onComplete }: MapJourneyProps) => {
       setActiveStop(null);
       map.easeTo({
         center: DINDIGUL,
-        zoom: mobile ? 10.2 : 12.5,
-        pitch: mobile ? 40 : 55,
+        zoom: mobile ? 11.4 : 12.5,
+        pitch: mobile ? 48 : 55,
         bearing: map.getBearing(),
         duration: 1400,
         easing: easeInOut,
