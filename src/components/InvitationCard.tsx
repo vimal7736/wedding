@@ -160,38 +160,43 @@ export const InvitationCard = () => {
           <Reveal className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] sm:tracking-[4px] text-[var(--color-gold-line)] uppercase font-semibold mb-4 sm:mb-6 text-center">
             Reception · Calicut
           </Reveal>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-6 items-stretch relative">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6 items-stretch relative">
             <Reveal
               delay={0}
               y={16}
               duration={0.9}
-              className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
+              className="col-span-2 sm:col-span-1 flex flex-col items-center justify-center text-center p-3 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">
-                  Date
-                </span>
-                <span className="font-['Cormorant_Garamond'] text-[28px] sm:text-[32px] md:text-[38px] text-black font-semibold mt-1 leading-none">
-                  01 Nov
-                </span>
-                <span className="font-['Cormorant_Garamond'] text-[13px] sm:text-[14px] text-[var(--color-ink)] opacity-70 tracking-[2px] uppercase">
-                  Sunday
-                </span>
-              </div>
+              <div className="flex flex-row sm:flex-col items-stretch justify-center w-full gap-3 sm:gap-0">
+                <div className="flex flex-col items-center justify-center flex-1 min-w-0 gap-0.5">
+                  <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[12px] tracking-[2px] sm:tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">
+                    Date
+                  </span>
+                  <span className="font-['Cormorant_Garamond'] text-[22px] sm:text-[32px] md:text-[38px] text-black font-semibold leading-none whitespace-nowrap">
+                    01 Nov
+                  </span>
+                  <span className="font-['Cormorant_Garamond'] text-[11px] sm:text-[14px] text-[var(--color-ink)] opacity-70 tracking-[1.5px] sm:tracking-[2px] uppercase">
+                    Sunday
+                  </span>
+                </div>
 
-              <div className="w-12 h-[1px] bg-[rgba(169,138,75,0.3)] my-3 sm:my-4" />
+                <div
+                  className="w-px shrink-0 bg-[rgba(169,138,75,0.3)] sm:w-12 sm:h-px sm:self-center sm:my-4"
+                  aria-hidden
+                />
 
-              <div className="flex flex-col items-center">
-                <span className="font-['Cinzel'] text-[9px] md:text-[10px] tracking-[2px] text-[var(--color-olive-deep)] uppercase font-semibold opacity-75">
-                  Event
-                </span>
-                <span className="font-['Cormorant_Garamond'] text-[18px] sm:text-[20px] md:text-[22px] text-black font-medium mt-1">
-                  Reception
-                </span>
-                <span className="font-['Cormorant_Garamond'] text-[12px] sm:text-[13px] text-[var(--color-ink)] opacity-60 tracking-[1px] uppercase mt-0.5">
-                  Evening
-                </span>
+                <div className="flex flex-col items-center justify-center flex-1 min-w-0 gap-0.5">
+                  <span className="font-['Cinzel'] text-[9px] md:text-[10px] tracking-[2px] text-[var(--color-olive-deep)] uppercase font-semibold opacity-75">
+                    Event
+                  </span>
+                  <span className="font-['Cormorant_Garamond'] text-[18px] sm:text-[20px] md:text-[22px] text-black font-medium leading-none">
+                    Reception
+                  </span>
+                  <span className="font-['Cormorant_Garamond'] text-[11px] sm:text-[13px] text-[var(--color-ink)] opacity-60 tracking-[1px] uppercase">
+                    Evening
+                  </span>
+                </div>
               </div>
             </Reveal>
 
@@ -199,17 +204,17 @@ export const InvitationCard = () => {
               delay={0.12}
               y={16}
               duration={0.9}
-              className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
+              className="flex flex-col items-center justify-center text-center p-3 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden min-h-0"
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
-              <div className="flex flex-col items-center gap-1">
-                <span className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">
+              <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[12px] tracking-[2px] sm:tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">
                   Venue
                 </span>
-                <span className="font-['Cormorant_Garamond'] text-[28px] sm:text-[32px] md:text-[38px] text-black font-semibold mt-2 leading-none italic">
+                <span className="font-['Cormorant_Garamond'] text-[20px] sm:text-[32px] md:text-[38px] text-black font-semibold mt-1 sm:mt-2 leading-none italic">
                   PV Garden
                 </span>
-                <span className="font-['Cormorant_Garamond'] text-[14px] sm:text-[15px] md:text-[17px] text-[var(--color-ink)] opacity-75 mt-2 sm:mt-3 max-w-[200px] leading-relaxed">
+                <span className="font-['Cormorant_Garamond'] text-[11px] sm:text-[15px] md:text-[17px] text-[var(--color-ink)] opacity-75 mt-1 sm:mt-3 max-w-[200px] leading-snug sm:leading-relaxed">
                   Bilathikulam, Calicut
                 </span>
               </div>
@@ -219,7 +224,7 @@ export const InvitationCard = () => {
               delay={0.24}
               y={16}
               duration={0.9}
-              className="flex flex-col items-center justify-center text-center p-4 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden"
+              className="flex flex-col items-center justify-center text-center p-3 sm:p-6 bg-[rgba(74,90,55,0.03)] rounded-xl sm:rounded-2xl border border-[rgba(169,138,75,0.18)] relative overflow-hidden min-h-0"
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--color-gold-line)] to-transparent opacity-60" />
 
@@ -227,13 +232,13 @@ export const InvitationCard = () => {
                 href="https://www.google.com/maps/search/?api=1&query=PV+Garden+Bilathikulam+Calicut"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex flex-col items-center gap-2 no-underline"
+                className="flex flex-col items-center gap-1 sm:gap-2 no-underline"
               >
-                <MapLeaf className="w-[64px] h-[64px] sm:w-[80px] sm:h-[80px]" />
-                <span className="font-['Cinzel'] text-[10px] md:text-[12px] tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">
+                <MapLeaf className="w-[48px] h-[48px] sm:w-[80px] sm:h-[80px]" />
+                <span className="font-['Cinzel'] text-[9px] sm:text-[10px] md:text-[12px] tracking-[2px] sm:tracking-[3px] text-[var(--color-gold-line)] uppercase font-semibold">
                   Directions
                 </span>
-                <span className="font-['Cormorant_Garamond'] text-[12px] sm:text-[13px] text-[var(--color-ink)] opacity-60">
+                <span className="font-['Cormorant_Garamond'] text-[10px] sm:text-[13px] text-[var(--color-ink)] opacity-60 leading-tight">
                   Tap to open Maps
                 </span>
               </a>
