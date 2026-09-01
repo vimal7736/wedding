@@ -49,15 +49,10 @@ export const InvitationCard = () => {
           delay={0.08}
           className="font-['Cormorant_Garamond'] text-[14px] md:text-[16px] tracking-[4px] text-[var(--color-olive-deep)] uppercase mt-2 font-medium"
         >
-          Together with their families
+          Together with us
         </Reveal>
 
-        <Reveal
-          delay={0.12}
-          className="mt-4 font-['Cormorant_Garamond'] italic text-[16px] md:text-[19px] tracking-[0.5px] text-[var(--color-ink)] opacity-80"
-        >
-          Invited by their parents
-        </Reveal>
+       
 
         <Reveal delay={0.1} y={16} duration={0.95} className="mt-8 flex flex-col gap-6 md:gap-8 items-center w-full">
           <div className="flex flex-col items-center">
@@ -146,8 +141,8 @@ export const InvitationCard = () => {
           y={14}
           className="font-['Cormorant_Garamond'] text-[18px] md:text-[22px] leading-[1.8] text-[var(--color-ink)] max-w-[600px] mx-auto font-light"
         >
-          Join us for an evening of joy, laughter and celebration as we welcome you to our
-          wedding reception — a warm gathering to celebrate our new beginning together.
+          Join us for joy, laughter and celebration as we welcome you to our
+          wedding and reception — a warm gathering to celebrate our new beginning together.
         </Reveal>
 
         <Reveal y={16} duration={0.9} className="w-full">
