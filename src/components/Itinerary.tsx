@@ -28,9 +28,6 @@ const itemVariants: Variants = {
 function ItineraryStatic() {
   return (
     <div className="w-full max-w-lg mx-auto mt-10 sm:mt-16 mb-8 sm:mb-12 relative px-1">
-      <div className="text-center mb-6 sm:mb-8 font-['Cinzel'] text-[12px] sm:text-[14px] tracking-[4px] sm:tracking-[6px] text-[var(--color-olive-deep)] uppercase">
-        Evening Flow
-      </div>
       <div className="relative py-2 sm:py-4">
         {events.map((event, idx) => (
           <div key={idx} className="mb-8 sm:mb-10">
@@ -66,13 +63,6 @@ export const Itinerary = () => {
       viewport={{ once: true, amount: 0.05, margin: '0px 0px 22% 0px' }}
       className="w-full max-w-lg mx-auto mt-10 sm:mt-16 mb-8 sm:mb-12 relative px-1"
     >
-      <motion.div
-        variants={itemVariants}
-        className="text-center mb-6 sm:mb-8 font-['Cinzel'] text-[12px] sm:text-[14px] tracking-[4px] sm:tracking-[6px] text-[var(--color-olive-deep)] uppercase"
-      >
-        Evening Flow
-      </motion.div>
-
       <div className="relative py-2 sm:py-4">
         {events.map((event, idx) => (
           <motion.div key={idx} variants={itemVariants} className="mb-8 sm:mb-10">
